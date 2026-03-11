@@ -45,15 +45,15 @@ export default function ProblemSection() {
   return (
     <ScrollPinSection pinDuration={500} className="bg-bg">
       {(progress) => {
-        // Phase 1: 0-0.3 — Missed call notifications stack up
-        // Phase 2: 0.3-0.5 — Stat appears
-        // Phase 3: 0.5-0.7 — Everything clears
-        // Phase 4: 0.7-1.0 — Solved state
+        // Phase 1: 0-0.25 — Missed call notifications stack up
+        // Phase 2: 0.25-0.45 — Stat appears with dark overlay dimming cards
+        // Phase 3: 0.45-0.55 — Quick fade out
+        // Phase 4: 0.55-1.0 — Solved state
 
-        const stackPhase = Math.min(progress / 0.3, 1);
-        const statPhase = progress > 0.3 ? Math.min((progress - 0.3) / 0.2, 1) : 0;
-        const clearPhase = progress > 0.5 ? Math.min((progress - 0.5) / 0.2, 1) : 0;
-        const solvedPhase = progress > 0.7 ? Math.min((progress - 0.7) / 0.3, 1) : 0;
+        const stackPhase = Math.min(progress / 0.25, 1);
+        const statPhase = progress > 0.25 ? Math.min((progress - 0.25) / 0.15, 1) : 0;
+        const clearPhase = progress > 0.45 ? Math.min((progress - 0.45) / 0.1, 1) : 0;
+        const solvedPhase = progress > 0.55 ? Math.min((progress - 0.55) / 0.25, 1) : 0;
 
         const visibleCount = Math.floor(stackPhase * missedCalls.length);
         const missedCount = Math.round(stackPhase * visibleCount);
@@ -137,15 +137,26 @@ export default function ProblemSection() {
               </div>
             )}
 
+            {/* Dark overlay that dims cards when stat appears */}
+            {statPhase > 0 && clearPhase < 1 && (
+              <div
+                className="absolute inset-0 z-[5]"
+                style={{
+                  background: 'rgba(5, 5, 12, 0.95)',
+                  opacity: Math.min(Math.min(statPhase * 2, 1), 1 - clearPhase),
+                }}
+              />
+            )}
+
             {/* Central stat */}
             <div
               className="absolute inset-0 flex items-center justify-center z-10"
               style={{
-                opacity: statPhase > 0 ? Math.min(statPhase, clearPhase < 0.5 ? 1 : 1 - (clearPhase - 0.5) * 2) : 0,
+                opacity: statPhase > 0 ? Math.min(statPhase, 1 - clearPhase) : 0,
               }}
             >
               <div className="text-center max-w-lg px-6">
-                <div className="text-5xl md:text-6xl font-extrabold text-[#FF4545] mb-4">
+                <div className="text-5xl md:text-7xl font-extrabold text-[#FF4545] mb-4">
                   $75,000
                 </div>
                 <p className="text-white/80 text-lg md:text-xl leading-relaxed">

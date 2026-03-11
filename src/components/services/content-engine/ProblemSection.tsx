@@ -47,15 +47,15 @@ export default function ProblemSection() {
   return (
     <ScrollPinSection pinDuration={500} className="bg-bg">
       {(progress) => {
-        // Phase 1: 0-0.3 calendar with TODOs, more multiplying
-        // Phase 2: 0.3-0.5 clock spins, "20 hours a week" text
-        // Phase 3: 0.5-0.8 slots fill with content cards
-        // Phase 4: 0.8-1.0 clock slows, checkmark, "Done."
+        // Phase 1: 0-0.25 calendar with TODOs, more multiplying
+        // Phase 2: 0.25-0.4 clock spins, "20 hours a week" text
+        // Phase 3: 0.4-0.65 slots fill with content cards
+        // Phase 4: 0.65-1.0 clock slows, checkmark, "Done."
 
-        const todoPhase = Math.min(progress / 0.3, 1);
-        const clockPhase = progress > 0.3 ? Math.min((progress - 0.3) / 0.2, 1) : 0;
-        const fillPhase = progress > 0.5 ? Math.min((progress - 0.5) / 0.3, 1) : 0;
-        const donePhase = progress > 0.8 ? Math.min((progress - 0.8) / 0.2, 1) : 0;
+        const todoPhase = Math.min(progress / 0.25, 1);
+        const clockPhase = progress > 0.25 ? Math.min((progress - 0.25) / 0.15, 1) : 0;
+        const fillPhase = progress > 0.4 ? Math.min((progress - 0.4) / 0.25, 1) : 0;
+        const donePhase = progress > 0.65 ? Math.min((progress - 0.65) / 0.2, 1) : 0;
 
         const filledCount = Math.floor(fillPhase * 21);
         const todoCount = Math.floor(todoPhase * extraTodos.length);

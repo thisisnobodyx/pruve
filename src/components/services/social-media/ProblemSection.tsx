@@ -97,15 +97,15 @@ export default function ProblemSection() {
   return (
     <ScrollPinSection pinDuration={500} className="bg-bg">
       {(progress) => {
-        // Phase 1: 0-0.3: Clock appears, tasks orbit one by one, counter adds up
-        // Phase 2: 0.3-0.5: "16 hours a week" stat
-        // Phase 3: 0.5-0.7: Tasks shrink, absorbed into AI icon. Counter drops
-        // Phase 4: 0.7-1.0: "1 hour/week. The rest is automated."
+        // Phase 1: 0-0.25: Clock appears, tasks orbit one by one
+        // Phase 2: 0.25-0.4: "16 hours a week" stat with dark overlay
+        // Phase 3: 0.4-0.55: Tasks shrink, absorbed into AI icon
+        // Phase 4: 0.55-1.0: "1 hour/week. The rest is automated."
 
-        const clockPhase = Math.min(progress / 0.3, 1);
-        const statPhase = progress > 0.25 ? Math.min((progress - 0.25) / 0.15, 1) : 0;
-        const absorbPhase = progress > 0.5 ? Math.min((progress - 0.5) / 0.2, 1) : 0;
-        const solvedPhase = progress > 0.7 ? Math.min((progress - 0.7) / 0.3, 1) : 0;
+        const clockPhase = Math.min(progress / 0.25, 1);
+        const statPhase = progress > 0.25 ? Math.min((progress - 0.25) / 0.12, 1) : 0;
+        const absorbPhase = progress > 0.4 ? Math.min((progress - 0.4) / 0.15, 1) : 0;
+        const solvedPhase = progress > 0.55 ? Math.min((progress - 0.55) / 0.3, 1) : 0;
 
         const visibleTasks = Math.floor(clockPhase * tasks.length);
         const currentHours = absorbPhase > 0
@@ -193,16 +193,27 @@ export default function ProblemSection() {
               </div>
             )}
 
+            {/* Dark overlay when stat appears */}
+            {statPhase > 0 && absorbPhase < 1 && (
+              <div
+                className="absolute inset-0 z-[5]"
+                style={{
+                  background: 'rgba(5, 5, 12, 0.95)',
+                  opacity: Math.min(Math.min(statPhase * 2, 1), absorbPhase > 0 ? 1 - absorbPhase : 1),
+                }}
+              />
+            )}
+
             {/* Hours counter */}
             {clockPhase > 0.3 && solvedPhase < 1 && (
               <div
-                className="absolute bottom-24 left-1/2 -translate-x-1/2 text-center"
+                className="absolute bottom-24 left-1/2 -translate-x-1/2 text-center z-10"
                 style={{
                   opacity: Math.min(statPhase, solvedPhase > 0 ? 1 - solvedPhase : 1),
                 }}
               >
                 <div
-                  className="text-5xl md:text-6xl font-extrabold mb-2 tabular-nums"
+                  className="text-5xl md:text-7xl font-extrabold mb-2 tabular-nums"
                   style={{ color: absorbPhase > 0.5 ? ACCENT : '#FF4545' }}
                 >
                   {currentHours} hours/week

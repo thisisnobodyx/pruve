@@ -192,15 +192,15 @@ export default function ProblemSection() {
   return (
     <ScrollPinSection pinDuration={500} className="bg-bg">
       {(progress) => {
-        // Phase 1 (0-0.3): SVG funnel draws. 100 visitor dots entering
-        // Phase 2 (0.3-0.5): Dots leak out. Only 3 reach bottom. "97% lost"
-        // Phase 3 (0.5-0.7): Funnel "repairs" — borders turn accent color
-        // Phase 4 (0.7-1.0): All dots flow through. "0 leads lost"
+        // Phase 1 (0-0.25): SVG funnel draws. Visitor dots entering
+        // Phase 2 (0.25-0.4): Dots leak out. Only 3 reach bottom. "97% lost"
+        // Phase 3 (0.4-0.55): Funnel "repairs" — borders turn accent color
+        // Phase 4 (0.55-1.0): All dots flow through. "0 leads lost"
 
-        const phase1 = Math.min(progress / 0.3, 1);
-        const phase2 = progress > 0.3 ? Math.min((progress - 0.3) / 0.2, 1) : 0;
-        const phase3 = progress > 0.5 ? Math.min((progress - 0.5) / 0.2, 1) : 0;
-        const phase4 = progress > 0.7 ? Math.min((progress - 0.7) / 0.3, 1) : 0;
+        const phase1 = Math.min(progress / 0.25, 1);
+        const phase2 = progress > 0.25 ? Math.min((progress - 0.25) / 0.15, 1) : 0;
+        const phase3 = progress > 0.4 ? Math.min((progress - 0.4) / 0.15, 1) : 0;
+        const phase4 = progress > 0.55 ? Math.min((progress - 0.55) / 0.3, 1) : 0;
 
         const isRepaired = phase3 > 0.5;
         const funnelColor = isRepaired ? ACCENT : 'rgba(255,255,255,0.15)';

@@ -46,15 +46,15 @@ export default function ProblemSection() {
   return (
     <ScrollPinSection pinDuration={500} className="bg-bg">
       {(progress) => {
-        // Phase 1: 0-0.35 — messages accumulate chaotically
-        // Phase 2: 0.35-0.55 — stat appears
-        // Phase 3: 0.55-0.75 — chaos clears
-        // Phase 4: 0.75-1.0 — solved state
+        // Phase 1: 0-0.25 — messages accumulate chaotically
+        // Phase 2: 0.25-0.4 — stat appears with dark overlay
+        // Phase 3: 0.4-0.5 — quick fade out
+        // Phase 4: 0.5-1.0 — solved state
 
         const chaosPhase = Math.min(progress / 0.25, 1);
-        const statPhase = progress > 0.3 ? Math.min((progress - 0.3) / 0.15, 1) : 0;
-        const clearPhase = progress > 0.5 ? Math.min((progress - 0.5) / 0.15, 1) : 0;
-        const solvedPhase = progress > 0.7 ? Math.min((progress - 0.7) / 0.3, 1) : 0;
+        const statPhase = progress > 0.25 ? Math.min((progress - 0.25) / 0.15, 1) : 0;
+        const clearPhase = progress > 0.4 ? Math.min((progress - 0.4) / 0.1, 1) : 0;
+        const solvedPhase = progress > 0.5 ? Math.min((progress - 0.5) / 0.3, 1) : 0;
 
         const visibleCount = Math.floor(chaosPhase * missedMessages.length);
         const unreadCount = Math.round(chaosPhase * 47);
@@ -125,6 +125,17 @@ export default function ProblemSection() {
               </div>
             )}
 
+            {/* Dark overlay that dims messages when stat appears */}
+            {statPhase > 0 && clearPhase < 1 && (
+              <div
+                className="absolute inset-0 z-[5]"
+                style={{
+                  background: 'rgba(5, 5, 12, 0.95)',
+                  opacity: Math.min(Math.min(statPhase * 2, 1), 1 - clearPhase),
+                }}
+              />
+            )}
+
             {/* Central stat */}
             <div
               className="absolute inset-0 flex items-center justify-center z-10"
@@ -133,7 +144,7 @@ export default function ProblemSection() {
               }}
             >
               <div className="text-center max-w-lg px-6">
-                <div className="text-5xl md:text-6xl font-extrabold text-[#FF4545] mb-4">78%</div>
+                <div className="text-5xl md:text-7xl font-extrabold text-[#FF4545] mb-4">78%</div>
                 <p className="text-white/80 text-lg md:text-xl leading-relaxed">
                   of customers who don&apos;t get a reply within 5 minutes buy from a competitor.
                 </p>

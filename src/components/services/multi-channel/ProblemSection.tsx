@@ -132,15 +132,15 @@ export default function ProblemSection() {
   return (
     <ScrollPinSection pinDuration={500} className="bg-bg">
       {(progress) => {
-        // Phase 1 (0-0.3): Chat windows appear chaotically
-        // Phase 2 (0.3-0.5): Cursor bouncing, "51 unread" stat
-        // Phase 3 (0.5-0.7): Windows compress toward center
-        // Phase 4 (0.7-1.0): Single unified inbox card
+        // Phase 1 (0-0.25): Chat windows appear chaotically
+        // Phase 2 (0.25-0.4): "51 unread" stat with dark overlay
+        // Phase 3 (0.4-0.5): Quick fade, windows compress
+        // Phase 4 (0.5-1.0): Single unified inbox card
 
-        const phase1 = Math.min(progress / 0.3, 1);
-        const phase2 = progress > 0.25 ? Math.min((progress - 0.25) / 0.2, 1) : 0;
-        const phase3 = progress > 0.5 ? Math.min((progress - 0.5) / 0.2, 1) : 0;
-        const phase4 = progress > 0.7 ? Math.min((progress - 0.7) / 0.3, 1) : 0;
+        const phase1 = Math.min(progress / 0.25, 1);
+        const phase2 = progress > 0.25 ? Math.min((progress - 0.25) / 0.15, 1) : 0;
+        const phase3 = progress > 0.4 ? Math.min((progress - 0.4) / 0.1, 1) : 0;
+        const phase4 = progress > 0.5 ? Math.min((progress - 0.5) / 0.3, 1) : 0;
 
         const visibleCards = Math.ceil(phase1 * appCards.length);
         const compressAmount = phase3;
@@ -220,15 +220,26 @@ export default function ProblemSection() {
               </div>
             )}
 
+            {/* Dark overlay that dims app windows when stat appears */}
+            {phase2 > 0 && phase4 < 1 && (
+              <div
+                className="absolute inset-0 z-[5]"
+                style={{
+                  background: 'rgba(5, 5, 12, 0.95)',
+                  opacity: Math.min(Math.min(phase2 * 2, 1), 1 - phase3),
+                }}
+              />
+            )}
+
             {/* Unread counter */}
             {phase2 > 0 && phase4 < 1 && (
               <div
-                className="absolute bottom-24 left-1/2 -translate-x-1/2 text-center"
+                className="absolute bottom-24 left-1/2 -translate-x-1/2 text-center z-10"
                 style={{
                   opacity: Math.min(phase2, phase4 > 0 ? 1 - phase4 : 1),
                 }}
               >
-                <div className="text-5xl md:text-6xl font-extrabold mb-2 tabular-nums text-[#FF4545]">
+                <div className="text-5xl md:text-7xl font-extrabold mb-2 tabular-nums text-[#FF4545]">
                   {totalUnread} unread
                 </div>
                 <p className="text-white/70 text-lg">
