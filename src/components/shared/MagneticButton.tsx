@@ -9,6 +9,7 @@ interface MagneticButtonProps {
   className?: string;
   onClick?: () => void;
   href?: string;
+  style?: React.CSSProperties;
 }
 
 const springConfig = { damping: 15, stiffness: 200, mass: 0.5 };
@@ -109,6 +110,7 @@ export default function MagneticButton({
   className = '',
   onClick,
   href,
+  style,
 }: MagneticButtonProps) {
   const { ref, x, y, handlers } = useMagneticEffect();
 
@@ -119,6 +121,7 @@ export default function MagneticButton({
           href={href}
           onClick={onClick}
           className={className}
+          style={style}
           data-magnetic
         >
           {children}
@@ -132,6 +135,7 @@ export default function MagneticButton({
       <motion.button
         onClick={onClick}
         className={className}
+        style={style}
         data-magnetic
         whileTap={{ scale: 0.97 }}
         transition={{ duration: 0.15 }}
