@@ -10,14 +10,14 @@ const config: Config = {
     extend: {
       colors: {
         bg: {
-          DEFAULT: '#0B0A14',
-          2: '#110F1F',
-          card: '#1A1726',
+          DEFAULT: '#0F0A1E',
+          2: '#150E2B',
+          card: '#1E1535',
         },
         white: '#F2F0EB',
         dim: '#9590A8',
         accent: {
-          DEFAULT: '#A855F7',
+          DEFAULT: '#7C3AED',
           2: '#7DF9C0',
           3: '#C8F135',
         },

@@ -122,7 +122,7 @@ export default function HeroSection() {
         >
           <MagneticButton
             href="/contact"
-            className="inline-flex items-center justify-center bg-accent text-white font-medium rounded-pill px-8 py-4 text-base transition-all duration-300 hover:shadow-[0_0_30px_rgba(168, 85, 247,0.3)] hover:brightness-110"
+            className="inline-flex items-center justify-center bg-accent text-white font-medium rounded-pill px-8 py-4 text-base transition-all duration-300 hover:shadow-[0_0_30px_rgba(124, 58, 237,0.3)] hover:brightness-110"
           >
             Book a Call
           </MagneticButton>

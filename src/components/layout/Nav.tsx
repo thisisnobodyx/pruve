@@ -89,7 +89,7 @@ export default function Nav() {
           {/* Desktop CTA */}
           <Link
             href="/contact"
-            className="hidden lg:flex items-center gap-2 bg-accent text-bg font-body font-medium text-sm px-6 py-2.5 rounded-pill transition-all duration-300 hover:shadow-[0_0_24px_rgba(168, 85, 247,0.4)] hover:scale-[1.02] active:scale-[0.98]"
+            className="hidden lg:flex items-center gap-2 bg-accent text-bg font-body font-medium text-sm px-6 py-2.5 rounded-pill transition-all duration-300 hover:shadow-[0_0_24px_rgba(124, 58, 237,0.4)] hover:scale-[1.02] active:scale-[0.98]"
           >
             Book a Call
           </Link>
@@ -163,7 +163,7 @@ export default function Nav() {
                 <Link
                   href="/contact"
                   onClick={closeMobile}
-                  className="inline-flex items-center gap-2 bg-accent text-bg font-body font-medium text-base px-8 py-3 rounded-pill transition-all duration-300 hover:shadow-[0_0_24px_rgba(168, 85, 247,0.4)]"
+                  className="inline-flex items-center gap-2 bg-accent text-bg font-body font-medium text-base px-8 py-3 rounded-pill transition-all duration-300 hover:shadow-[0_0_24px_rgba(124, 58, 237,0.4)]"
                 >
                   Book a Call
                 </Link>

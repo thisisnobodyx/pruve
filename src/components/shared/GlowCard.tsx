@@ -20,7 +20,7 @@ type GlowCardProps<T extends ElementType = 'div'> = GlowCardBaseProps & {
   as?: T;
 } & Omit<ComponentPropsWithoutRef<T>, keyof GlowCardBaseProps | 'as'>;
 
-const DEFAULT_GLOW_COLOR = '#A855F7';
+const DEFAULT_GLOW_COLOR = '#7C3AED';
 
 export default function GlowCard<T extends ElementType = 'div'>({
   children,

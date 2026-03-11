@@ -147,10 +147,10 @@ export default function CustomCursor() {
             marginTop: -ringCurrentSize / 2,
             borderWidth: hovering ? 1.5 : 1.5,
             borderColor: hovering
-              ? 'rgba(168, 85, 247, 0.6)'
+              ? 'rgba(124, 58, 237, 0.6)'
               : 'rgba(242, 240, 235, 0.5)',
             backgroundColor: hovering
-              ? 'rgba(168, 85, 247, 0.2)'
+              ? 'rgba(124, 58, 237, 0.2)'
               : 'transparent',
           }}
           transition={{

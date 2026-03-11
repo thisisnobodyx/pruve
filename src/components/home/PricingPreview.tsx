@@ -133,7 +133,7 @@ export default function PricingPreview() {
               key={plan.name}
               className={`relative bg-bg-card rounded-2xl p-8 transition-all duration-300 ${
                 plan.popular
-                  ? 'border border-accent/30 shadow-[0_0_40px_rgba(168, 85, 247,0.1)] md:scale-105 z-10'
+                  ? 'border border-accent/30 shadow-[0_0_40px_rgba(124, 58, 237,0.1)] md:scale-105 z-10'
                   : 'border border-border'
               }`}
             >
@@ -191,7 +191,7 @@ export default function PricingPreview() {
               {plan.popular ? (
                 <MagneticButton
                   href="/contact"
-                  className="block bg-accent text-white rounded-pill py-3 w-full text-center font-medium transition-all duration-300 hover:shadow-[0_0_30px_rgba(168, 85, 247,0.3)] hover:brightness-110"
+                  className="block bg-accent text-white rounded-pill py-3 w-full text-center font-medium transition-all duration-300 hover:shadow-[0_0_30px_rgba(124, 58, 237,0.3)] hover:brightness-110"
                 >
                   {plan.cta}
                 </MagneticButton>

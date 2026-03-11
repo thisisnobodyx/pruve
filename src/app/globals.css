@@ -9,7 +9,7 @@
   --white: #F2F0EB;
   --dim: #9590A8;
   --border: rgba(255, 255, 255, 0.08);
-  --accent: #A855F7;
+  --accent: #7C3AED;
   --accent-2: #7DF9C0;
   --accent-3: #C8F135;
   --danger: #FF4545;
@@ -92,13 +92,13 @@ body {
 
 /* Glow effects */
 .glow-accent {
-  box-shadow: 0 0 20px rgba(168, 85, 247, 0.15),
-    0 0 60px rgba(168, 85, 247, 0.05);
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.15),
+    0 0 60px rgba(124, 58, 237, 0.05);
 }
 
 .glow-accent-strong {
-  box-shadow: 0 0 30px rgba(168, 85, 247, 0.3),
-    0 0 80px rgba(168, 85, 247, 0.1);
+  box-shadow: 0 0 30px rgba(124, 58, 237, 0.3),
+    0 0 80px rgba(124, 58, 237, 0.1);
 }
 
 /* Blinking dot */

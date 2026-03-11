@@ -32,7 +32,7 @@ const services: ServiceCard[] = [
 
 function Card({ icon: Icon, title, description }: ServiceCard) {
   return (
-    <div className="group relative bg-bg-card border border-border rounded-card p-8 md:p-10 transition-all duration-300 hover:scale-[1.02] hover:border-accent/30 hover:shadow-[0_0_30px_rgba(168, 85, 247,0.1)] overflow-hidden">
+    <div className="group relative bg-bg-card border border-border rounded-card p-8 md:p-10 transition-all duration-300 hover:scale-[1.02] hover:border-accent/30 hover:shadow-[0_0_30px_rgba(124, 58, 237,0.1)] overflow-hidden">
       {/* Icon */}
       <div className="w-[60px] h-[60px] rounded-full bg-accent/10 flex items-center justify-center">
         <Icon className="w-7 h-7 text-accent" strokeWidth={1.5} />

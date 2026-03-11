@@ -63,7 +63,7 @@ const services: Service[] = [
     name: 'Smart Website',
     description: 'Websites that think, chat, and convert visitors',
     href: '/services/smart-website',
-    accentColor: '#A855F7',
+    accentColor: '#7C3AED',
   },
   {
     icon: GitBranch,

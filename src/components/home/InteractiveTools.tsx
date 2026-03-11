@@ -504,7 +504,7 @@ function AutomationBuilder() {
                     y1={0}
                     x2={pos.x}
                     y2={pos.y}
-                    stroke="rgba(168, 85, 247, 0.3)"
+                    stroke="rgba(124, 58, 237, 0.3)"
                     strokeWidth={2}
                     strokeDasharray="6 4"
                     initial={{ pathLength: 0, opacity: 0 }}
@@ -522,7 +522,7 @@ function AutomationBuilder() {
                   <motion.circle
                     key={`dot-${i}`}
                     r={3}
-                    fill="#A855F7"
+                    fill="#7C3AED"
                     initial={{ opacity: 0 }}
                     animate={{
                       opacity: [0, 1, 1, 0],
@@ -547,7 +547,7 @@ function AutomationBuilder() {
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.4, ease: 'backOut' }}
               >
-                <div className="w-24 h-24 rounded-full bg-accent/20 border-2 border-accent flex items-center justify-center shadow-[0_0_40px_rgba(168, 85, 247,0.15)]">
+                <div className="w-24 h-24 rounded-full bg-accent/20 border-2 border-accent flex items-center justify-center shadow-[0_0_40px_rgba(124, 58, 237,0.15)]">
                   <span className="font-display text-sm font-bold text-white">
                     Pruve AI
                   </span>
@@ -666,7 +666,7 @@ export default function InteractiveTools() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`inline-flex items-center gap-2 rounded-pill px-6 py-2.5 text-sm font-medium transition-all duration-300 ${
                     isActive
-                      ? 'bg-accent text-white shadow-[0_0_20px_rgba(168, 85, 247,0.2)]'
+                      ? 'bg-accent text-white shadow-[0_0_20px_rgba(124, 58, 237,0.2)]'
                       : 'bg-bg-card border border-border text-dim hover:text-white'
                   }`}
                 >

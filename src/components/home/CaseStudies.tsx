@@ -84,7 +84,7 @@ export default function CaseStudies() {
           {caseStudies.map((study) => (
             <div
               key={study.title}
-              className="group bg-bg-card border border-border rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:border-accent/20 hover:shadow-[0_0_30px_rgba(168, 85, 247,0.06)]"
+              className="group bg-bg-card border border-border rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:border-accent/20 hover:shadow-[0_0_30px_rgba(124, 58, 237,0.06)]"
             >
               {/* Industry Badge */}
               <span className="text-xs font-mono uppercase tracking-widest text-accent mb-4 block">

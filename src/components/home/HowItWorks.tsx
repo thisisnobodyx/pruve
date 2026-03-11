@@ -45,8 +45,8 @@ function StepCard({ step, delay }: { step: Step; delay: number }) {
           className="block font-display text-6xl md:text-7xl font-extrabold leading-none mb-4 select-none"
           animate={{
             color: isHovered
-              ? 'rgba(168, 85, 247, 0.3)'
-              : 'rgba(168, 85, 247, 0.1)',
+              ? 'rgba(124, 58, 237, 0.3)'
+              : 'rgba(124, 58, 237, 0.1)',
           }}
           transition={{ duration: 0.3 }}
         >
@@ -101,7 +101,7 @@ export default function HowItWorks() {
                 y1="1"
                 x2="100"
                 y2="1"
-                stroke="rgba(168, 85, 247, 0.2)"
+                stroke="rgba(124, 58, 237, 0.2)"
                 strokeWidth="2"
                 strokeDasharray="6 4"
                 vectorEffect="non-scaling-stroke"
