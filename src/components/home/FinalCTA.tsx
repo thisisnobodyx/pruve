@@ -1,12 +1,27 @@
 'use client';
 
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import MagneticButton from '@/components/shared/MagneticButton';
 import ParticleNetwork from '@/components/shared/ParticleNetwork';
 
 export default function FinalCTA() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'start 0.3'],
+  });
+
+  // Heading scales from 0.8 to 1.0 as it enters the viewport
+  const headingScale = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
+  const headingOpacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
+
   return (
-    <section className="py-section px-6 relative overflow-hidden">
+    <section
+      ref={sectionRef}
+      className="py-section px-6 relative overflow-hidden"
+    >
       {/* Particle Background */}
       <ParticleNetwork
         className="absolute inset-0 w-full h-full z-0"
@@ -19,11 +34,14 @@ export default function FinalCTA() {
 
       {/* Content */}
       <div className="relative z-10 text-center max-w-3xl mx-auto">
-        <ScrollReveal>
+        {/* Heading — scales in on scroll */}
+        <motion.div
+          style={{ scale: headingScale, opacity: headingOpacity }}
+        >
           <h2 className="font-display text-4xl md:text-6xl font-extrabold mb-6 text-white">
             Ready to automate your business?
           </h2>
-        </ScrollReveal>
+        </motion.div>
 
         <ScrollReveal delay={0.1}>
           <p className="text-dim text-xl mb-10">
@@ -31,23 +49,47 @@ export default function FinalCTA() {
           </p>
         </ScrollReveal>
 
-        <ScrollReveal delay={0.2}>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        {/* Buttons — fade in from below with bounce easing */}
+        <motion.div
+          className="flex flex-col sm:flex-row gap-4 justify-center"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.7,
+            delay: 0.25,
+            ease: [0.34, 1.56, 0.64, 1], // bounce easing
+          }}
+          viewport={{ once: true, amount: 0.3 }}
+        >
+          {/* Pulsing glow ring behind primary CTA */}
+          <div className="relative">
+            <motion.div
+              className="absolute inset-0 rounded-pill bg-accent/20 blur-xl"
+              animate={{
+                scale: [1, 1.15, 1],
+                opacity: [0.4, 0.7, 0.4],
+              }}
+              transition={{
+                duration: 2.5,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+            />
             <MagneticButton
               href="/contact"
-              className="inline-flex items-center justify-center bg-accent text-white font-medium rounded-pill px-8 py-4 text-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(124, 58, 237,0.3)] hover:brightness-110"
+              className="relative inline-flex items-center justify-center bg-accent text-white font-medium rounded-pill px-8 py-4 text-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(124, 58, 237,0.3)] hover:brightness-110"
             >
               Book a Free Call
             </MagneticButton>
-
-            <MagneticButton
-              href="/pricing"
-              className="inline-flex items-center justify-center bg-transparent border border-border text-white font-medium rounded-pill px-8 py-4 text-lg transition-all duration-300 hover:bg-white/5 hover:border-white/15"
-            >
-              View Pricing
-            </MagneticButton>
           </div>
-        </ScrollReveal>
+
+          <MagneticButton
+            href="/pricing"
+            className="inline-flex items-center justify-center bg-transparent border border-border text-white font-medium rounded-pill px-8 py-4 text-lg transition-all duration-300 hover:bg-white/5 hover:border-white/15"
+          >
+            View Pricing
+          </MagneticButton>
+        </motion.div>
       </div>
     </section>
   );

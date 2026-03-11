@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef } from 'react';
 import Link from 'next/link';
 import {
   MessageCircle,
@@ -12,6 +13,11 @@ import {
   Instagram,
   type LucideIcon,
 } from 'lucide-react';
+import {
+  motion,
+  useScroll,
+  useTransform,
+} from 'framer-motion';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 
 interface Service {
@@ -83,9 +89,22 @@ const services: Service[] = [
 
 function ServiceCard({ service, index }: { service: Service; index: number }) {
   const Icon = service.icon;
+  const row = Math.floor(index / 4); // 0 for first row, 1 for second
+
+  // Staggered reveal: second row starts later
+  const delay = row * 0.2 + (index % 4) * 0.08;
 
   return (
-    <ScrollReveal delay={index * 0.08}>
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.6,
+        delay,
+        ease: [0.25, 0.1, 0.25, 1],
+      }}
+      viewport={{ once: true, amount: 0.15 }}
+    >
       <Link
         href={service.href}
         className="group block bg-bg-card border border-border rounded-card p-6 transition-all duration-300 hover:-translate-y-1 h-full"
@@ -102,13 +121,15 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
           (e.currentTarget as HTMLElement).style.borderColor = '';
         }}
       >
-        {/* Icon */}
-        <div
+        {/* Icon — spring scale on hover */}
+        <motion.div
           className="w-10 h-10 flex items-center justify-center mb-4"
           style={{ color: service.accentColor }}
+          whileHover={{ scale: 1.2 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 15 }}
         >
           <Icon className="w-10 h-10" strokeWidth={1.5} />
-        </div>
+        </motion.div>
 
         {/* Name */}
         <h3 className="font-display font-bold text-lg text-white mb-2">
@@ -128,7 +149,52 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
           Explore &rarr;
         </span>
       </Link>
-    </ScrollReveal>
+    </motion.div>
+  );
+}
+
+/** Subtle parallax wrapper — bottom-row cards move slightly slower */
+function ParallaxGrid({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  });
+
+  // Top row moves faster (more positive), bottom row moves slower
+  const yTop = useTransform(scrollYProgress, [0, 1], [30, -30]);
+  const yBottom = useTransform(scrollYProgress, [0, 1], [50, -10]);
+
+  // Split services into two rows
+  const topRow = services.slice(0, 4);
+  const bottomRow = services.slice(4);
+
+  return (
+    <div ref={ref} className="max-w-6xl mx-auto">
+      {/* Top row */}
+      <motion.div
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4"
+        style={{ y: yTop }}
+      >
+        {topRow.map((service, index) => (
+          <ServiceCard key={service.name} service={service} index={index} />
+        ))}
+      </motion.div>
+
+      {/* Bottom row — slightly slower parallax */}
+      <motion.div
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+        style={{ y: yBottom }}
+      >
+        {bottomRow.map((service, index) => (
+          <ServiceCard
+            key={service.name}
+            service={service}
+            index={index + 4}
+          />
+        ))}
+      </motion.div>
+    </div>
   );
 }
 
@@ -148,12 +214,12 @@ export default function ServicesShowcase() {
         </p>
       </ScrollReveal>
 
-      {/* Services grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
+      {/* Services grid — parallax rows + staggered reveal */}
+      <ParallaxGrid>
         {services.map((service, index) => (
           <ServiceCard key={service.name} service={service} index={index} />
         ))}
-      </div>
+      </ParallaxGrid>
     </section>
   );
 }

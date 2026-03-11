@@ -1,5 +1,7 @@
 'use client';
 
+import { useRef, useEffect, useState } from 'react';
+import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import AnimatedCounter from '@/components/shared/AnimatedCounter';
 
@@ -47,11 +49,79 @@ const caseStudies: CaseStudy[] = [
   },
 ];
 
+/** Typewriter/reveal animation for result text */
+function TypewriterResult({
+  text,
+  delay = 0,
+}: {
+  text: string;
+  delay?: number;
+}) {
+  const ref = useRef<HTMLParagraphElement>(null);
+  const isInView = useInView(ref, { once: true, amount: 0.5 });
+  const [displayed, setDisplayed] = useState('');
+
+  useEffect(() => {
+    if (!isInView) return;
+
+    const timeout = setTimeout(() => {
+      let i = 0;
+      const interval = setInterval(() => {
+        i++;
+        setDisplayed(text.slice(0, i));
+        if (i >= text.length) clearInterval(interval);
+      }, 40);
+
+      return () => clearInterval(interval);
+    }, delay * 1000);
+
+    return () => clearTimeout(timeout);
+  }, [isInView, text, delay]);
+
+  return (
+    <p
+      ref={ref}
+      className="text-accent-2 text-2xl font-display font-bold mb-2 min-h-[2rem]"
+    >
+      {displayed}
+      {isInView && displayed.length < text.length && (
+        <span className="animate-pulse">|</span>
+      )}
+    </p>
+  );
+}
+
+/** Horizontal line that draws across as the section enters view */
+function AnimatedHorizontalLine() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start 0.9', 'start 0.4'],
+  });
+
+  const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
+
+  return (
+    <div ref={ref} className="absolute bottom-0 left-0 right-0 h-[1px]">
+      <motion.div
+        className="h-full bg-gradient-to-r from-transparent via-accent/40 to-transparent"
+        style={{
+          scaleX,
+          transformOrigin: 'center',
+        }}
+      />
+    </div>
+  );
+}
+
 export default function CaseStudies() {
   return (
     <>
       {/* Part 1: Stats Bar */}
-      <section className="w-full py-16 px-6 bg-bg-2 border-y border-border">
+      <section className="w-full py-16 px-6 bg-bg-2 border-y border-border relative">
+        {/* Animated horizontal line drawing */}
+        <AnimatedHorizontalLine />
+
         <ScrollReveal
           className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto text-center"
           staggerDelay={0.1}
@@ -77,13 +147,23 @@ export default function CaseStudies() {
           </h2>
         </ScrollReveal>
 
-        <ScrollReveal
+        {/* Case study cards — 3D perspective flip */}
+        <div
           className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto"
-          staggerDelay={0.12}
+          style={{ perspective: '1200px' }}
         >
-          {caseStudies.map((study) => (
-            <div
+          {caseStudies.map((study, index) => (
+            <motion.div
               key={study.title}
+              initial={{ opacity: 0, rotateX: 10, y: 40 }}
+              whileInView={{ opacity: 1, rotateX: 0, y: 0 }}
+              transition={{
+                duration: 0.7,
+                delay: index * 0.15,
+                ease: [0.25, 0.1, 0.25, 1],
+              }}
+              viewport={{ once: true, amount: 0.2 }}
+              style={{ transformStyle: 'preserve-3d' }}
               className="group bg-bg-card border border-border rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:border-accent/20 hover:shadow-[0_0_30px_rgba(124, 58, 237,0.06)]"
             >
               {/* Industry Badge */}
@@ -96,18 +176,16 @@ export default function CaseStudies() {
                 {study.title}
               </h3>
 
-              {/* Result Metric */}
-              <p className="text-accent-2 text-2xl font-display font-bold mb-2">
-                {study.result}
-              </p>
+              {/* Result Metric — typewriter animation */}
+              <TypewriterResult text={study.result} delay={index * 0.2 + 0.3} />
 
               {/* Description */}
               <p className="text-dim text-sm leading-relaxed">
                 {study.description}
               </p>
-            </div>
+            </motion.div>
           ))}
-        </ScrollReveal>
+        </div>
       </section>
     </>
   );
