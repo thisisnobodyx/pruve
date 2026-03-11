@@ -3,68 +3,38 @@
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import MagneticButton from '@/components/shared/MagneticButton';
-import ParticleNetwork from '@/components/shared/ParticleNetwork';
+import Starfield from '@/components/shared/Starfield';
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 40 },
   visible: (delay: number) => ({
     opacity: 1,
     y: 0,
     transition: {
-      duration: 1,
+      duration: 1.2,
       delay,
       ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number],
     },
   }),
 };
 
-const statusCards = [
-  {
-    text: 'Lead captured',
-    className: 'top-[18%] right-[8%] xl:right-[12%] animate-float',
-  },
-  {
-    text: 'WhatsApp replied',
-    className: 'top-[45%] left-[4%] xl:left-[10%] animate-float-delayed',
-  },
-  {
-    text: 'Post scheduled',
-    className: 'bottom-[18%] right-[6%] xl:right-[14%] animate-float-delayed-2',
-  },
-];
-
 export default function HeroSection() {
   return (
     <section className="relative h-screen w-full overflow-hidden bg-bg">
-      {/* Particle background */}
-      <ParticleNetwork
+      {/* Moving starfield background */}
+      <Starfield
         className="absolute inset-0 w-full h-full z-0"
-        particleCount={120}
-        interactive
+        starCount={350}
+        speed={0.25}
       />
 
       {/* Purple radial glow behind content */}
-      <div className="absolute inset-0 z-[1]">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-accent/[0.07] rounded-full blur-[120px]" />
+      <div className="absolute inset-0 z-[1] pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[700px] bg-accent/[0.06] rounded-full blur-[150px]" />
       </div>
 
-      {/* Floating status cards — absolutely positioned, hidden on mobile */}
-      {statusCards.map((card) => (
-        <motion.div
-          key={card.text}
-          custom={1.0}
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          className={`absolute z-20 hidden lg:block ${card.className}`}
-        >
-          <div className="bg-bg-card/80 backdrop-blur-md border border-border rounded-card px-4 py-2 text-sm font-body text-white/80 flex items-center gap-2 select-none">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent-2 shrink-0" />
-            <span>{card.text}</span>
-            <span className="text-accent-2">&#10003;</span>
-          </div>
-        </motion.div>
-      ))}
+      {/* Vignette overlay */}
+      <div className="absolute inset-0 z-[2] pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_40%,var(--bg)_100%)]" />
 
       {/* Main content — absolutely centered */}
       <div className="absolute inset-0 z-10 flex items-center justify-center">
@@ -77,7 +47,7 @@ export default function HeroSection() {
             animate="visible"
             className="flex justify-center mb-8"
           >
-            <span className="inline-flex items-center gap-2 border border-border rounded-pill px-4 py-1.5 text-sm font-mono text-dim">
+            <span className="inline-flex items-center gap-2 border border-border rounded-pill px-4 py-1.5 text-sm font-mono text-dim backdrop-blur-sm">
               <span className="inline-block w-2 h-2 rounded-full bg-accent-2 animate-blink" />
               AI-Powered Agency
             </span>
@@ -120,14 +90,14 @@ export default function HeroSection() {
           >
             <MagneticButton
               href="/contact"
-              className="inline-flex items-center justify-center bg-accent text-white font-medium rounded-pill px-8 py-4 text-base transition-all duration-300 hover:shadow-[0_0_30px_rgba(124,58,237,0.4)] hover:brightness-110"
+              className="inline-flex items-center justify-center bg-accent text-white font-semibold rounded-pill px-8 py-4 text-base transition-all duration-300 hover:shadow-[0_0_30px_rgba(124,58,237,0.4)] hover:brightness-110"
             >
               Book a Call
             </MagneticButton>
 
             <MagneticButton
               href="/work"
-              className="inline-flex items-center justify-center gap-2 bg-transparent border border-border text-dim font-medium rounded-pill px-8 py-4 text-base transition-all duration-300 hover:text-white hover:border-white/20"
+              className="inline-flex items-center justify-center gap-2 bg-transparent border border-border text-dim font-semibold rounded-pill px-8 py-4 text-base transition-all duration-300 hover:text-white hover:border-white/20"
             >
               See Our Work
               <ArrowRight className="w-4 h-4" />

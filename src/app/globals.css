@@ -23,7 +23,6 @@
 }
 
 html {
-  scroll-behavior: smooth;
   background: var(--bg);
 }
 
@@ -109,31 +108,6 @@ body {
 
 .animate-blink {
   animation: blink 2s ease-in-out infinite;
-}
-
-/* Float animation for status cards */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  33% {
-    transform: translateY(-8px) rotate(1deg);
-  }
-  66% {
-    transform: translateY(4px) rotate(-1deg);
-  }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-float-delayed {
-  animation: float 6s ease-in-out 2s infinite;
-}
-
-.animate-float-delayed-2 {
-  animation: float 6s ease-in-out 4s infinite;
 }
 
 /* Gradient text */

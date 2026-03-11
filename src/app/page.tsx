@@ -1,4 +1,5 @@
 import HeroSection from '@/components/home/HeroSection';
+import ScrollToTop from '@/components/shared/ScrollToTop';
 import MarqueeBar from '@/components/home/MarqueeBar';
 import WhatWeDo from '@/components/home/WhatWeDo';
 import LiveDemo from '@/components/home/LiveDemo';
@@ -13,6 +14,7 @@ import FinalCTA from '@/components/home/FinalCTA';
 export default function Home() {
   return (
     <>
+      <ScrollToTop />
       <HeroSection />
       <MarqueeBar />
       <WhatWeDo />

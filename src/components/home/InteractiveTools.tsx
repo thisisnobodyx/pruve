@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Calculator, PenTool, GitBranch } from 'lucide-react';
 import MagneticButton from '@/components/shared/MagneticButton';
 import AnimatedCounter from '@/components/shared/AnimatedCounter';
@@ -638,24 +638,36 @@ function AutomationBuilder() {
 // ---------------------------------------------------------------------------
 export default function InteractiveTools() {
   const [activeTab, setActiveTab] = useState<TabId>('calculator');
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'start 0.3'],
+  });
+
+  const titleY = useTransform(scrollYProgress, [0, 1], [60, 0]);
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
 
   return (
-    <section className="py-section px-6 bg-bg-2">
+    <section ref={sectionRef} className="py-section px-6 bg-bg-2">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <ScrollReveal direction="up">
-          <h2 className="font-display text-4xl md:text-5xl font-extrabold text-center text-white mb-4">
+        {/* Header — scroll-driven entrance */}
+        <motion.div style={{ y: titleY, opacity: titleOpacity }} className="text-center mb-12">
+          <h2 className="font-display text-4xl md:text-5xl font-extrabold text-white mb-4">
             See what Pruve can do — right now.
           </h2>
-        </ScrollReveal>
-        <ScrollReveal delay={0.1} direction="up">
-          <p className="text-dim text-center mb-12">
+          <p className="text-dim">
             No signup. No sales call. Try it live.
           </p>
-        </ScrollReveal>
+        </motion.div>
 
         {/* Tab buttons */}
-        <ScrollReveal delay={0.2} direction="up">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          viewport={{ once: true }}
+        >
           <div className="flex flex-wrap justify-center gap-2 mb-12">
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
@@ -666,7 +678,7 @@ export default function InteractiveTools() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`inline-flex items-center gap-2 rounded-pill px-6 py-2.5 text-sm font-medium transition-all duration-300 ${
                     isActive
-                      ? 'bg-accent text-white shadow-[0_0_20px_rgba(124, 58, 237,0.2)]'
+                      ? 'bg-accent text-white shadow-[0_0_20px_rgba(124,58,237,0.2)]'
                       : 'bg-bg-card border border-border text-dim hover:text-white'
                   }`}
                 >
@@ -676,23 +688,30 @@ export default function InteractiveTools() {
               );
             })}
           </div>
-        </ScrollReveal>
+        </motion.div>
 
-        {/* Tab content */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            variants={contentVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-          >
-            {activeTab === 'calculator' && <RevenueCalculator />}
-            {activeTab === 'caption' && <CaptionGenerator />}
-            {activeTab === 'automation' && <AutomationBuilder />}
-          </motion.div>
-        </AnimatePresence>
+        {/* Tab content — with scale entrance */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          viewport={{ once: true }}
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              variants={contentVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+            >
+              {activeTab === 'calculator' && <RevenueCalculator />}
+              {activeTab === 'caption' && <CaptionGenerator />}
+              {activeTab === 'automation' && <AutomationBuilder />}
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
       </div>
     </section>
   );

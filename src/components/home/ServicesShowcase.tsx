@@ -199,20 +199,26 @@ function ParallaxGrid({ children }: { children: React.ReactNode }) {
 }
 
 export default function ServicesShowcase() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress: sectionProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'start 0.3'],
+  });
+
+  const titleY = useTransform(sectionProgress, [0, 1], [60, 0]);
+  const titleOpacity = useTransform(sectionProgress, [0, 0.5], [0, 1]);
+
   return (
-    <section className="py-section px-6">
-      {/* Section header */}
-      <ScrollReveal>
-        <h2 className="font-display text-4xl md:text-5xl font-extrabold text-center mb-4 text-white">
+    <section ref={sectionRef} className="py-section px-6">
+      {/* Section header — scroll-driven entrance */}
+      <motion.div style={{ y: titleY, opacity: titleOpacity }} className="text-center mb-16">
+        <h2 className="font-display text-4xl md:text-5xl font-extrabold mb-4 text-white">
           Everything you need to automate.
         </h2>
-      </ScrollReveal>
-
-      <ScrollReveal delay={0.1}>
-        <p className="text-dim text-center mb-16 text-lg font-body">
+        <p className="text-dim text-lg font-body">
           Eight AI-powered services. One agency.
         </p>
-      </ScrollReveal>
+      </motion.div>
 
       {/* Services grid — parallax rows + staggered reveal */}
       <ParallaxGrid>

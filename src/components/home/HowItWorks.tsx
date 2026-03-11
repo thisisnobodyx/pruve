@@ -2,7 +2,6 @@
 
 import { useRef, useState } from 'react';
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
-import ScrollReveal from '@/components/shared/ScrollReveal';
 
 interface Step {
   number: string;
@@ -122,20 +121,27 @@ function AnimatedDashedLine() {
 }
 
 export default function HowItWorks() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'start 0.3'],
+  });
+
+  const titleY = useTransform(scrollYProgress, [0, 1], [60, 0]);
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
+
   return (
-    <section className="py-section px-6 bg-bg">
+    <section ref={sectionRef} className="py-section px-6 bg-bg">
       <div className="max-w-5xl mx-auto">
-        {/* Header */}
-        <ScrollReveal direction="up">
-          <h2 className="font-display text-4xl md:text-5xl font-extrabold text-center text-white mb-4">
+        {/* Header — scroll-driven entrance */}
+        <motion.div style={{ y: titleY, opacity: titleOpacity }} className="text-center mb-20">
+          <h2 className="font-display text-4xl md:text-5xl font-extrabold text-white mb-4">
             How it works.
           </h2>
-        </ScrollReveal>
-        <ScrollReveal delay={0.1} direction="up">
-          <p className="text-dim text-center mb-20 max-w-lg mx-auto">
+          <p className="text-dim max-w-lg mx-auto">
             From first call to full automation in three steps.
           </p>
-        </ScrollReveal>
+        </motion.div>
 
         {/* Steps grid with connecting line */}
         <div className="relative">

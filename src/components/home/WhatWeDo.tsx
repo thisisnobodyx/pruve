@@ -1,9 +1,8 @@
 'use client';
 
 import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { Bot, Zap, TrendingUp, type LucideIcon } from 'lucide-react';
-import ScrollReveal from '@/components/shared/ScrollReveal';
 
 interface ServiceCard {
   icon: LucideIcon;
@@ -108,20 +107,26 @@ function GradientRevealText({
 }
 
 export default function WhatWeDo() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'start 0.3'],
+  });
+
+  const titleY = useTransform(scrollYProgress, [0, 1], [60, 0]);
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
+
   return (
-    <section className="py-section px-6 bg-bg">
-      {/* Section header — gradient reveal */}
-      <ScrollReveal>
+    <section ref={sectionRef} className="py-section px-6 bg-bg">
+      {/* Section header — scroll-driven entrance + gradient reveal */}
+      <motion.div style={{ y: titleY, opacity: titleOpacity }}>
         <GradientRevealText className="font-display text-4xl md:text-5xl font-extrabold text-center mb-4">
           What We Do
         </GradientRevealText>
-      </ScrollReveal>
-
-      <ScrollReveal delay={0.1}>
         <p className="text-dim text-center mb-16 text-lg max-w-xl mx-auto font-body">
           Three pillars. One mission. Automate everything.
         </p>
-      </ScrollReveal>
+      </motion.div>
 
       {/* Cards grid — scale + fade in */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">

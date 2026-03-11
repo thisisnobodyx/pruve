@@ -1,8 +1,8 @@
 'use client';
 
 import { useRef, useState, useEffect, useCallback } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Star } from 'lucide-react';
-import ScrollReveal from '@/components/shared/ScrollReveal';
 
 interface Testimonial {
   quote: string;
@@ -59,6 +59,15 @@ const testimonials: Testimonial[] = [
 export default function Testimonials() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'start 0.3'],
+  });
+
+  const titleY = useTransform(scrollYProgress, [0, 1], [60, 0]);
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
 
   const handleScroll = useCallback(() => {
     const el = scrollRef.current;
@@ -66,7 +75,7 @@ export default function Testimonials() {
 
     const scrollLeft = el.scrollLeft;
     const cardWidth = el.firstElementChild
-      ? (el.firstElementChild as HTMLElement).offsetWidth + 24 // gap-6 = 24px
+      ? (el.firstElementChild as HTMLElement).offsetWidth + 24
       : 400;
 
     const index = Math.round(scrollLeft / cardWidth);
@@ -91,48 +100,50 @@ export default function Testimonials() {
   };
 
   return (
-    <section className="py-section px-6 overflow-hidden">
-      <ScrollReveal>
+    <section ref={sectionRef} className="py-section px-6 overflow-hidden">
+      {/* Header — scroll-driven entrance */}
+      <motion.div style={{ y: titleY, opacity: titleOpacity }}>
         <h2 className="font-display text-4xl md:text-5xl font-extrabold text-center mb-16 text-white">
           Trusted by businesses everywhere.
         </h2>
-      </ScrollReveal>
+      </motion.div>
 
-      {/* Scrollable Carousel */}
-      <ScrollReveal delay={0.15}>
+      {/* Scrollable Carousel — cards fade in staggered */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: true }}
+      >
         <div
           ref={scrollRef}
           className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
         >
           {testimonials.map((testimonial, i) => (
-            <div
+            <motion.div
               key={testimonial.name}
               className="min-w-[350px] md:min-w-[400px] snap-center shrink-0"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+              viewport={{ once: true, amount: 0.2 }}
             >
-              <div className="bg-bg-card border border-border rounded-2xl p-8 h-full flex flex-col transition-all duration-300 hover:border-accent/15">
-                {/* Large Quote Mark */}
+              <div className="bg-bg-card border border-border rounded-2xl p-8 h-full flex flex-col transition-all duration-300 hover:border-accent/15 hover:-translate-y-1">
                 <span className="font-display text-5xl text-accent/20 leading-none mb-4 select-none">
                   &ldquo;
                 </span>
 
-                {/* Quote Text */}
                 <p className="text-white/90 text-sm leading-relaxed mb-6 flex-1">
                   {testimonial.quote}
                 </p>
 
-                {/* Divider */}
                 <div className="border-t border-border pt-4">
-                  {/* Name */}
                   <p className="font-display font-bold text-sm text-white">
                     {testimonial.name}
                   </p>
-
-                  {/* Business */}
                   <p className="text-dim text-xs mb-2">
                     {testimonial.business}
                   </p>
-
-                  {/* Stars */}
                   <div className="flex gap-0.5">
                     {Array.from({ length: testimonial.rating }).map(
                       (_, starIdx) => (
@@ -145,10 +156,10 @@ export default function Testimonials() {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </ScrollReveal>
+      </motion.div>
 
       {/* Navigation Dots */}
       <div className="flex gap-2 justify-center mt-8">
@@ -166,7 +177,6 @@ export default function Testimonials() {
         ))}
       </div>
 
-      {/* Scrollbar-hide CSS */}
       <style jsx global>{`
         .scrollbar-hide::-webkit-scrollbar {
           display: none;

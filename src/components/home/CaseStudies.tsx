@@ -2,7 +2,6 @@
 
 import { useRef, useEffect, useState } from 'react';
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
-import ScrollReveal from '@/components/shared/ScrollReveal';
 import AnimatedCounter from '@/components/shared/AnimatedCounter';
 
 interface Stat {
@@ -115,37 +114,48 @@ function AnimatedHorizontalLine() {
 }
 
 export default function CaseStudies() {
+  const caseSectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress: caseProgress } = useScroll({
+    target: caseSectionRef,
+    offset: ['start end', 'start 0.3'],
+  });
+
+  const caseTitleY = useTransform(caseProgress, [0, 1], [60, 0]);
+  const caseTitleOpacity = useTransform(caseProgress, [0, 0.5], [0, 1]);
+
   return (
     <>
       {/* Part 1: Stats Bar */}
       <section className="w-full py-16 px-6 bg-bg-2 border-y border-border relative">
-        {/* Animated horizontal line drawing */}
         <AnimatedHorizontalLine />
 
-        <ScrollReveal
-          className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto text-center"
-          staggerDelay={0.1}
-        >
-          {stats.map((stat) => (
-            <div key={stat.label}>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto text-center">
+          {stats.map((stat, i) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              viewport={{ once: true }}
+            >
               <AnimatedCounter
                 target={stat.target}
                 suffix={stat.suffix}
                 className="font-display text-4xl md:text-5xl font-extrabold text-white"
               />
               <p className="text-dim text-sm mt-2">{stat.label}</p>
-            </div>
+            </motion.div>
           ))}
-        </ScrollReveal>
+        </div>
       </section>
 
       {/* Part 2: Case Studies */}
-      <section className="py-section px-6">
-        <ScrollReveal>
+      <section ref={caseSectionRef} className="py-section px-6">
+        <motion.div style={{ y: caseTitleY, opacity: caseTitleOpacity }}>
           <h2 className="font-display text-4xl md:text-5xl font-extrabold text-center mb-16 text-white">
             Results that speak.
           </h2>
-        </ScrollReveal>
+        </motion.div>
 
         {/* Case study cards — 3D perspective flip */}
         <div

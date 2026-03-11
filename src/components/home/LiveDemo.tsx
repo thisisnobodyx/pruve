@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect, type FormEvent } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { CheckCircle2, Send } from 'lucide-react';
-import ScrollReveal from '@/components/shared/ScrollReveal';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -69,13 +69,20 @@ export default function LiveDemo() {
 
   const chatEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
-  // Auto-scroll to bottom on new messages or loading state change
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'start 0.2'],
+  });
+
+  const leftY = useTransform(scrollYProgress, [0, 1], [80, 0]);
+  const leftOpacity = useTransform(scrollYProgress, [0, 0.4], [0, 1]);
+
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
 
-  // Reset messages when business type changes
   useEffect(() => {
     setMessages([
       {
@@ -137,47 +144,55 @@ export default function LiveDemo() {
   }
 
   return (
-    <section className="bg-bg-2 py-section px-6">
+    <section ref={sectionRef} className="bg-bg-2 py-section px-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
-        {/* Left column — copy */}
-        <ScrollReveal direction="left">
-          <div>
-            <span className="font-mono text-accent text-sm tracking-widest uppercase mb-4 block">
-              LIVE DEMO
-            </span>
+        {/* Left column — copy with scroll-driven entrance */}
+        <motion.div style={{ y: leftY, opacity: leftOpacity }}>
+          <span className="font-mono text-accent text-sm tracking-widest uppercase mb-4 block">
+            LIVE DEMO
+          </span>
 
-            <h2 className="font-display text-4xl md:text-5xl font-extrabold leading-tight mb-6 text-white">
-              This is what your customers will experience.
-            </h2>
+          <h2 className="font-display text-4xl md:text-5xl font-extrabold leading-tight mb-6 text-white">
+            This is what your customers will experience.
+          </h2>
 
-            <p className="text-dim text-lg mb-8 font-body leading-relaxed">
-              Try it. Pick a business type, type a customer message, and watch
-              your AI agent respond in real time.
-            </p>
+          <p className="text-dim text-lg mb-8 font-body leading-relaxed">
+            Try it. Pick a business type, type a customer message, and watch
+            your AI agent respond in real time.
+          </p>
 
-            <ul className="space-y-4">
-              {bulletPoints.map((point) => (
-                <li key={point} className="flex items-center gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-accent-2 shrink-0" />
-                  <span className="text-white font-body">{point}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </ScrollReveal>
+          <ul className="space-y-4">
+            {bulletPoints.map((point, i) => (
+              <motion.li
+                key={point}
+                className="flex items-center gap-3"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <CheckCircle2 className="w-5 h-5 text-accent-2 shrink-0" />
+                <span className="text-white font-body">{point}</span>
+              </motion.li>
+            ))}
+          </ul>
+        </motion.div>
 
-        {/* Right column — WhatsApp-style chat */}
-        <ScrollReveal direction="right" delay={0.2}>
+        {/* Right column — WhatsApp-style chat with 3D entrance */}
+        <motion.div
+          initial={{ opacity: 0, y: 50, rotateY: -5 }}
+          whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
+          transition={{ duration: 0.8, delay: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
+          viewport={{ once: true, amount: 0.15 }}
+          style={{ perspective: '1200px' }}
+        >
           <div className="bg-bg-card rounded-2xl border border-border overflow-hidden max-w-md mx-auto w-full shadow-2xl shadow-black/30">
-            {/* WhatsApp top bar */}
             <div className="bg-[#075E54] px-4 py-3 flex items-center gap-3">
               <div className="w-9 h-9 rounded-full bg-accent/20 flex items-center justify-center shrink-0">
                 <span className="text-accent text-xs font-bold">AI</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-white text-sm font-medium">
-                  AI Assistant
-                </span>
+                <span className="text-white text-sm font-medium">AI Assistant</span>
                 <span className="flex items-center gap-1.5 text-[11px] text-white/60">
                   <span className="w-1.5 h-1.5 rounded-full bg-accent-2 inline-block" />
                   online
@@ -185,7 +200,6 @@ export default function LiveDemo() {
               </div>
             </div>
 
-            {/* Business type selector */}
             <div className="px-4 py-3 border-b border-border">
               <select
                 value={selectedBusiness}
@@ -200,17 +214,14 @@ export default function LiveDemo() {
                 }}
               >
                 {businessTypes.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
+                  <option key={type} value={type}>{type}</option>
                 ))}
               </select>
             </div>
 
-            {/* Chat messages area */}
             <div
               ref={chatContainerRef}
-              className="h-[350px] overflow-y-auto p-4 space-y-3 scrollbar-thin"
+              className="h-[350px] overflow-y-auto p-4 space-y-3"
             >
               {messages.map((message, index) => (
                 <ChatBubble key={index} message={message} />
@@ -219,7 +230,6 @@ export default function LiveDemo() {
               <div ref={chatEndRef} />
             </div>
 
-            {/* Input area */}
             <form
               onSubmit={handleSubmit}
               className="flex items-center gap-2 bg-bg px-3 py-3 border-t border-border"
@@ -242,7 +252,7 @@ export default function LiveDemo() {
               </button>
             </form>
           </div>
-        </ScrollReveal>
+        </motion.div>
       </div>
     </section>
   );
