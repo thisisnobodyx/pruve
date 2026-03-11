@@ -141,6 +141,30 @@ body {
   animation: pulse-ring 2s ease-out infinite;
 }
 
+/* Vertical scroll-up animation for social feed */
+@keyframes scroll-up {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+.animate-scroll-up {
+  animation: scroll-up 30s linear infinite;
+}
+
+/* Sparkle effect */
+@keyframes sparkle {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 0.6; }
+}
+
+.animate-sparkle {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
 /* Mobile cursor override */
 @media (pointer: coarse) {
   * {
