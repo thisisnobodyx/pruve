@@ -45,7 +45,7 @@ export default function ProblemSection() {
   );
 
   return (
-    <ScrollPinSection pinDuration={200} className="bg-bg">
+    <ScrollPinSection pinDuration={500} className="bg-bg">
       {(progress) => {
         // Phase 1: 0-0.3 calendar with TODOs, more multiplying
         // Phase 2: 0.3-0.5 clock spins, "20 hours a week" text

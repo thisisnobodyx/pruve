@@ -95,7 +95,7 @@ function AIIcon() {
 
 export default function ProblemSection() {
   return (
-    <ScrollPinSection pinDuration={200} className="bg-bg">
+    <ScrollPinSection pinDuration={500} className="bg-bg">
       {(progress) => {
         // Phase 1: 0-0.3: Clock appears, tasks orbit one by one, counter adds up
         // Phase 2: 0.3-0.5: "16 hours a week" stat

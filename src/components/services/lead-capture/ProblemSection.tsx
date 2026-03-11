@@ -190,7 +190,7 @@ function Funnel({
 
 export default function ProblemSection() {
   return (
-    <ScrollPinSection pinDuration={200} className="bg-bg">
+    <ScrollPinSection pinDuration={500} className="bg-bg">
       {(progress) => {
         // Phase 1 (0-0.3): SVG funnel draws. 100 visitor dots entering
         // Phase 2 (0.3-0.5): Dots leak out. Only 3 reach bottom. "97% lost"

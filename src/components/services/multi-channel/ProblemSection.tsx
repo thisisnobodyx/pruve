@@ -130,7 +130,7 @@ function UnifiedCard() {
 
 export default function ProblemSection() {
   return (
-    <ScrollPinSection pinDuration={200} className="bg-bg">
+    <ScrollPinSection pinDuration={500} className="bg-bg">
       {(progress) => {
         // Phase 1 (0-0.3): Chat windows appear chaotically
         // Phase 2 (0.3-0.5): Cursor bouncing, "51 unread" stat

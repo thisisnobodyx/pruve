@@ -17,7 +17,7 @@ const manualSteps = [
 
 export default function ProblemSection() {
   return (
-    <ScrollPinSection pinDuration={250} className="bg-bg">
+    <ScrollPinSection pinDuration={500} className="bg-bg">
       {(progress) => {
         // Phase 1: 0-0.25 — Manual steps appear one by one
         // Phase 2: 0.25-0.45 — Error appears, total time counter

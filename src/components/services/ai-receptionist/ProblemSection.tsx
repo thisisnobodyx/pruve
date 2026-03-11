@@ -43,7 +43,7 @@ export default function ProblemSection() {
   );
 
   return (
-    <ScrollPinSection pinDuration={200} className="bg-bg">
+    <ScrollPinSection pinDuration={500} className="bg-bg">
       {(progress) => {
         // Phase 1: 0-0.3 — Missed call notifications stack up
         // Phase 2: 0.3-0.5 — Stat appears

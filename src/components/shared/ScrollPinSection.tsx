@@ -10,7 +10,7 @@ interface ScrollPinSectionProps {
 
 export default function ScrollPinSection({
   children,
-  pinDuration = 200,
+  pinDuration = 500,
   className = '',
 }: ScrollPinSectionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -29,12 +29,16 @@ export default function ScrollPinSection({
 
       gsapModule.default.registerPlugin(stModule.ScrollTrigger);
 
+      // GSAP ScrollTrigger doesn't parse 'vh' units in end strings —
+      // convert vh to pixels manually
+      const pinDistancePx = (pinDuration / 100) * window.innerHeight;
+
       const trigger = stModule.ScrollTrigger.create({
         trigger: container,
         start: 'top top',
-        end: `+=${pinDuration}vh`,
+        end: `+=${pinDistancePx}`,
         pin: pin,
-        scrub: 0.5,
+        scrub: 1,
         onUpdate: (self) => {
           setProgress(self.progress);
         },
