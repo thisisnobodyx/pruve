@@ -117,7 +117,7 @@ export default function WhatWeDo() {
   const titleOpacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
 
   return (
-    <section ref={sectionRef} className="py-section px-6 bg-bg">
+    <section ref={sectionRef} className="py-section-mobile md:py-section px-6 bg-bg">
       {/* Section header — scroll-driven entrance + gradient reveal */}
       <motion.div style={{ y: titleY, opacity: titleOpacity }}>
         <GradientRevealText className="font-display text-4xl md:text-5xl font-extrabold text-center mb-4">

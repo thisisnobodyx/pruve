@@ -450,7 +450,7 @@ function AIEmployeesSection() {
   const visibleRows = expanded ? allRows : allRows.slice(0, INITIAL_ROWS);
 
   return (
-    <section ref={sectionRef} className="py-section px-6 bg-bg">
+    <section ref={sectionRef} className="py-section-mobile md:py-section px-6 bg-bg">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div
@@ -534,13 +534,13 @@ function AIEmployeesSection() {
               {/* CTA */}
               <MagneticButton
                 href="/contact"
-                className="w-full py-3 rounded-pill text-sm font-bold text-center block"
+                className="w-full py-3.5 px-6 rounded-pill text-sm font-bold text-center block whitespace-nowrap"
                 style={{
                   background: plan.color,
                   color: '#0F0A1E',
                 }}
               >
-                Hire {plan.name}
+                Hire {plan.title}
               </MagneticButton>
             </motion.div>
           ))}
@@ -720,7 +720,7 @@ function AIAgentsSection() {
   }
 
   return (
-    <section ref={sectionRef} className="py-section px-6 bg-bg-2">
+    <section ref={sectionRef} className="py-section-mobile md:py-section px-6 bg-bg-2">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div
@@ -891,7 +891,7 @@ function OneTimeProjectsSection() {
   const isInView = useInView(sectionRef, { once: true, margin: '-60px' });
 
   return (
-    <section ref={sectionRef} className="py-section px-6 bg-bg">
+    <section ref={sectionRef} className="py-section-mobile md:py-section px-6 bg-bg">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <motion.div
@@ -953,7 +953,7 @@ function FAQSection() {
   const isInView = useInView(sectionRef, { once: true, margin: '-60px' });
 
   return (
-    <section ref={sectionRef} className="py-section px-6 bg-bg-2">
+    <section ref={sectionRef} className="py-section-mobile md:py-section px-6 bg-bg-2">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <motion.div

@@ -290,9 +290,31 @@ export default function ContactPage() {
     }
   };
 
-  const handleSubmit = () => {
-    // TODO: send form data to API
-    setStep(5);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    setSubmitError('');
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed to send. Please try again.');
+      }
+
+      setStep(5);
+    } catch (err: any) {
+      setSubmitError(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const totalSteps = 4;
@@ -614,20 +636,25 @@ export default function ContactPage() {
                 >
                   ← Back
                 </button>
-                <button
-                  onClick={() => {
-                    if (step === totalSteps) handleSubmit();
-                    else setStep(step + 1);
-                  }}
-                  disabled={!canProceed()}
-                  className={`px-8 py-3 rounded-pill font-medium text-sm transition-all duration-300 ${
-                    canProceed()
-                      ? 'bg-accent text-bg hover:shadow-[0_0_24px_rgba(124,58,237,0.4)] hover:scale-[1.02]'
-                      : 'bg-bg-card text-dim border border-border cursor-not-allowed'
-                  }`}
-                >
-                  {step === totalSteps ? 'Submit →' : 'Continue →'}
-                </button>
+                <div className="text-right">
+                  {submitError && (
+                    <p className="text-danger text-xs mb-2">{submitError}</p>
+                  )}
+                  <button
+                    onClick={() => {
+                      if (step === totalSteps) handleSubmit();
+                      else setStep(step + 1);
+                    }}
+                    disabled={!canProceed() || submitting}
+                    className={`px-8 py-3 rounded-pill font-medium text-sm transition-all duration-300 ${
+                      canProceed() && !submitting
+                        ? 'bg-accent text-bg hover:shadow-[0_0_24px_rgba(124,58,237,0.4)] hover:scale-[1.02]'
+                        : 'bg-bg-card text-dim border border-border cursor-not-allowed'
+                    }`}
+                  >
+                    {submitting ? 'Sending...' : step === totalSteps ? 'Submit →' : 'Continue →'}
+                  </button>
+                </div>
               </div>
             )}
           </div>

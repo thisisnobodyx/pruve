@@ -38,6 +38,7 @@ const config: Config = {
         section: '160px',
         'section-sm': '120px',
         'section-xs': '80px',
+        'section-mobile': '64px',
       },
     },
   },

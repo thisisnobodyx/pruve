@@ -201,7 +201,7 @@ export default function ServicePageTemplate({
       </section>
 
       {/* Features */}
-      <section ref={featuresRef} className="py-section px-6 bg-bg-2">
+      <section ref={featuresRef} className="py-section-mobile md:py-section px-6 bg-bg-2">
         <div className="max-w-6xl mx-auto">
           <motion.div style={{ y: featuresTitleY, opacity: featuresTitleOpacity }} className="text-center mb-16">
             <h2 className="font-display text-4xl md:text-5xl font-extrabold text-white mb-4">What you get</h2>
@@ -218,7 +218,7 @@ export default function ServicePageTemplate({
 
       {/* Demo (optional) */}
       {demoComponent && (
-        <section className="py-section px-6">
+        <section className="py-section-mobile md:py-section px-6">
           <div className="max-w-4xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
@@ -243,7 +243,7 @@ export default function ServicePageTemplate({
       )}
 
       {/* How It Works */}
-      <section ref={stepsRef} className="py-section px-6">
+      <section ref={stepsRef} className="py-section-mobile md:py-section px-6">
         <div className="max-w-5xl mx-auto">
           <motion.div style={{ y: stepsTitleY, opacity: stepsTitleOpacity }} className="text-center mb-20">
             <h2 className="font-display text-4xl md:text-5xl font-extrabold text-white mb-4">How it works</h2>
@@ -275,7 +275,7 @@ export default function ServicePageTemplate({
       </section>
 
       {/* Benefits + CTA */}
-      <section ref={benefitsRef} className="py-section px-6 bg-bg-2">
+      <section ref={benefitsRef} className="py-section-mobile md:py-section px-6 bg-bg-2">
         <div className="max-w-4xl mx-auto">
           <motion.div style={{ y: benefitsTitleY, opacity: benefitsTitleOpacity }} className="text-center mb-16">
             <h2 className="font-display text-4xl md:text-5xl font-extrabold text-white mb-4">

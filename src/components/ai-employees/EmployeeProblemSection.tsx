@@ -39,7 +39,7 @@ export default function EmployeeProblemSection() {
   const isTableInView = useInView(tableRef, { once: true, margin: '-40px' });
 
   return (
-    <section ref={sectionRef} className="py-section px-6 bg-bg">
+    <section ref={sectionRef} className="py-section-mobile md:py-section px-6 bg-bg">
       <div className="max-w-4xl mx-auto">
         {/* Section header */}
         <motion.div

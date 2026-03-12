@@ -130,7 +130,7 @@ export default function CapabilityExplorer({ selectedIndustry }: CapabilityExplo
   const executiveCaps = capabilities.filter((c) => c.tier === 'executive');
 
   return (
-    <section className="py-section px-6 bg-bg">
+    <section className="py-section-mobile md:py-section px-6 bg-bg">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div

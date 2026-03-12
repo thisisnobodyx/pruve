@@ -150,7 +150,7 @@ export default function CaseStudies() {
       </section>
 
       {/* Part 2: Case Studies */}
-      <section ref={caseSectionRef} className="py-section px-6">
+      <section ref={caseSectionRef} className="py-section-mobile md:py-section px-6">
         <motion.div style={{ y: caseTitleY, opacity: caseTitleOpacity }}>
           <h2 className="font-display text-4xl md:text-5xl font-extrabold text-center mb-16 text-white">
             Results that speak.

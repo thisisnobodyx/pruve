@@ -131,7 +131,7 @@ export default function HowItWorks() {
   const titleOpacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
 
   return (
-    <section ref={sectionRef} className="py-section px-6 bg-bg">
+    <section ref={sectionRef} className="py-section-mobile md:py-section px-6 bg-bg">
       <div className="max-w-5xl mx-auto">
         {/* Header — scroll-driven entrance */}
         <motion.div style={{ y: titleY, opacity: titleOpacity }} className="text-center mb-20">

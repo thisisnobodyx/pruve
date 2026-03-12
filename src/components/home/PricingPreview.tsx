@@ -218,7 +218,7 @@ export default function PricingPreview() {
   const titleOpacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
 
   return (
-    <section ref={sectionRef} className="py-section px-6">
+    <section ref={sectionRef} className="py-section-mobile md:py-section px-6">
       {/* Header — parallax entrance */}
       <motion.div style={{ y: titleY, opacity: titleOpacity }}>
         <h2 className="font-display text-4xl md:text-5xl font-extrabold text-center mb-4 text-white">

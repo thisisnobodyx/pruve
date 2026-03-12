@@ -117,7 +117,7 @@ export default function InteractiveDemo() {
   };
 
   return (
-    <section ref={sectionRef} id="demo" className="py-section px-6 bg-bg-2">
+    <section ref={sectionRef} id="demo" className="py-section-mobile md:py-section px-6 bg-bg-2">
       <div className="max-w-4xl mx-auto">
         <motion.div style={{ y: titleY, opacity: titleOpacity }} className="text-center mb-12">
           <span className="font-mono text-sm tracking-widest uppercase mb-3 block" style={{ color: ACCENT }}>

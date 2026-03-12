@@ -18,8 +18,17 @@ export default function ScrollPinSection({
   const containerRef = useRef<HTMLDivElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const progressRef = useRef(0);
   const rafRef = useRef<number | null>(null);
+
+  // Detect mobile
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   // Throttle React state updates to ~30fps max to prevent excessive re-renders
   const scheduleUpdate = useCallback((value: number) => {
@@ -37,6 +46,10 @@ export default function ScrollPinSection({
     const pin = pinRef.current;
     if (!container || !pin) return;
 
+    // On mobile, use reduced pin duration for better UX
+    const mobileDuration = Math.min(pinDuration, 250);
+    const effectiveDuration = isMobile ? mobileDuration : pinDuration;
+
     let trigger: any = null;
 
     const initGSAP = async () => {
@@ -45,7 +58,7 @@ export default function ScrollPinSection({
 
       gsapModule.default.registerPlugin(stModule.ScrollTrigger);
 
-      const pinDistancePx = (pinDuration / 100) * window.innerHeight;
+      const pinDistancePx = (effectiveDuration / 100) * window.innerHeight;
 
       trigger = stModule.ScrollTrigger.create({
         trigger: container,
@@ -70,7 +83,7 @@ export default function ScrollPinSection({
         trigger.kill();
       }
     };
-  }, [pinDuration, scheduleUpdate]);
+  }, [pinDuration, scheduleUpdate, isMobile]);
 
   return (
     <div ref={containerRef} className={className}>

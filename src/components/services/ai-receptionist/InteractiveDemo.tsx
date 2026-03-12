@@ -173,7 +173,7 @@ export default function InteractiveDemo() {
   }
 
   return (
-    <section ref={sectionRef} id="demo" className="py-section px-6 bg-bg-2">
+    <section ref={sectionRef} id="demo" className="py-section-mobile md:py-section px-6 bg-bg-2">
       <motion.div
         style={{ opacity: sectionOpacity, scale: sectionScale }}
         className="max-w-4xl mx-auto"

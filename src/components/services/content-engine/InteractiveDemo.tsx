@@ -195,7 +195,7 @@ export default function InteractiveDemo() {
   const MockupComponent = mockupComponents[contentType];
 
   return (
-    <section ref={sectionRef} id="demo" className="py-section px-6 bg-bg-2">
+    <section ref={sectionRef} id="demo" className="py-section-mobile md:py-section px-6 bg-bg-2">
       <motion.div style={{ opacity: sectionOpacity, scale: sectionScale }} className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">

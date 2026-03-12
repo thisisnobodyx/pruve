@@ -98,7 +98,7 @@ export default function EmployeeChatDemo() {
     <section
       ref={sectionRef}
       id="how-it-works"
-      className="py-section px-6 bg-bg"
+      className="py-section-mobile md:py-section px-6 bg-bg"
     >
       <div className="max-w-3xl mx-auto">
         {/* Section header */}

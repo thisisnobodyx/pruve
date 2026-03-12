@@ -51,7 +51,7 @@ export default function CostComparison() {
   return (
     <>
       {/* SECTION 5: THE TECHNOLOGY */}
-      <section className="py-section px-6 bg-bg-2">
+      <section className="py-section-mobile md:py-section px-6 bg-bg-2">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <motion.div

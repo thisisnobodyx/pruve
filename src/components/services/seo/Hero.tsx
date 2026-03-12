@@ -233,11 +233,11 @@ export default function SEOHero() {
         </motion.div>
 
         {/* Right — Animated search rankings */}
-        <div className="relative flex justify-center">
+        <div className="relative flex justify-center overflow-hidden">
           {[0, 1, 2].map((i) => (
             <motion.div
               key={i}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-2xl border pointer-events-none"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-2xl border pointer-events-none hidden lg:block"
               style={{ borderColor: `${ACCENT}15` }}
               animate={{ width: [200, 520], height: [150, 420], opacity: [0.2, 0] }}
               transition={{ duration: 4, repeat: Infinity, delay: i * 1.2, ease: 'easeOut' }}

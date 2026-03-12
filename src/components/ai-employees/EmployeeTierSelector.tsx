@@ -121,7 +121,7 @@ export default function EmployeeTierSelector() {
   const isHeadingInView = useInView(headingRef, { once: true, margin: '-60px' });
 
   return (
-    <section className="py-section px-6 bg-bg-2">
+    <section className="py-section-mobile md:py-section px-6 bg-bg-2">
       <div className="max-w-6xl mx-auto">
         {/* Section header */}
         <motion.div

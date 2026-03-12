@@ -259,7 +259,7 @@ export default function ServicesShowcase() {
   const titleOpacity = useTransform(sectionProgress, [0, 0.5], [0, 1]);
 
   return (
-    <section ref={sectionRef} className="py-section px-6">
+    <section ref={sectionRef} className="py-section-mobile md:py-section px-6">
       {/* Section header */}
       <motion.div style={{ y: titleY, opacity: titleOpacity }} className="text-center mb-16">
         <h2 className="font-display text-4xl md:text-5xl font-extrabold mb-4 text-white">

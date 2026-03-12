@@ -29,7 +29,7 @@ export default function ResultsSection() {
   const titleOpacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
 
   return (
-    <section ref={sectionRef} className="py-section px-6 bg-bg-2">
+    <section ref={sectionRef} className="py-section-mobile md:py-section px-6 bg-bg-2">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <motion.div style={{ y: titleY, opacity: titleOpacity }} className="text-center mb-16">

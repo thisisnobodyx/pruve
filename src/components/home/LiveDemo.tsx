@@ -147,7 +147,7 @@ export default function LiveDemo() {
   }
 
   return (
-    <section ref={sectionRef} className="bg-bg-2 py-section px-6">
+    <section ref={sectionRef} className="bg-bg-2 py-section-mobile md:py-section px-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
         {/* Left column — copy with scroll-driven entrance */}
         <motion.div style={{ y: leftY, opacity: leftOpacity }}>

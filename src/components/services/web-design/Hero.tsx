@@ -318,11 +318,11 @@ export default function WebDesignHero() {
         </motion.div>
 
         {/* Right — Live-building browser mockup */}
-        <div className="relative flex justify-center">
+        <div className="relative flex justify-center overflow-hidden">
           {[0, 1, 2].map((i) => (
             <motion.div
               key={i}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-2xl border pointer-events-none"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-2xl border pointer-events-none hidden lg:block"
               style={{ borderColor: `${ACCENT}20` }}
               animate={{ width: [200, 500], height: [150, 400], opacity: [0.3, 0] }}
               transition={{ duration: 3.5, repeat: Infinity, delay: i * 1, ease: 'easeOut' }}
@@ -335,7 +335,7 @@ export default function WebDesignHero() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
           >
-            <BrowserMockup url="yourbrand.co" className="w-[460px] max-w-full">
+            <BrowserMockup url="yourbrand.co" className="w-[460px] max-w-[85vw]">
               <LiveBuildPreview />
             </BrowserMockup>
           </motion.div>

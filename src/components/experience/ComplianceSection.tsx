@@ -39,7 +39,7 @@ export default function ComplianceSection({ selectedIndustry }: ComplianceSectio
   if (!selectedIndustry) return null;
 
   return (
-    <section className="py-section px-6 bg-bg-2">
+    <section className="py-section-mobile md:py-section px-6 bg-bg-2">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div

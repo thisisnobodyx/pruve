@@ -127,7 +127,7 @@ export default function DaySimulation({ industryId }: { industryId: string }) {
 
   if (!industry || events.length === 0) {
     return (
-      <section className="py-section px-6 text-center">
+      <section className="py-section-mobile md:py-section px-6 text-center">
         <p className="text-dim">No simulation data available for this industry.</p>
       </section>
     );

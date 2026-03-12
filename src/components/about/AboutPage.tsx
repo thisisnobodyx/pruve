@@ -90,7 +90,7 @@ function LiveMetrics() {
   ];
 
   return (
-    <section className="py-section px-6 bg-bg-2">
+    <section className="py-section-mobile md:py-section px-6 bg-bg-2">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -169,7 +169,7 @@ function WhyAIEmployees() {
   const textY = useTransform(scrollYProgress, [0.1, 0.3], [40, 0]);
 
   return (
-    <section ref={sectionRef} className="py-section px-6 bg-bg">
+    <section ref={sectionRef} className="py-section-mobile md:py-section px-6 bg-bg">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -274,7 +274,7 @@ const timelineItems = [
 
 function Timeline() {
   return (
-    <section className="py-section px-6 bg-bg-2">
+    <section className="py-section-mobile md:py-section px-6 bg-bg-2">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -349,7 +349,7 @@ function Timeline() {
 /* ------------------------------------------------------------------ */
 function ValueCards() {
   return (
-    <section className="py-section px-6 bg-bg">
+    <section className="py-section-mobile md:py-section px-6 bg-bg">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

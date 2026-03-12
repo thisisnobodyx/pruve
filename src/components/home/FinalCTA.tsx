@@ -20,7 +20,7 @@ export default function FinalCTA() {
   return (
     <section
       ref={sectionRef}
-      className="py-section px-6 relative overflow-hidden"
+      className="py-section-mobile md:py-section px-6 relative overflow-hidden"
     >
       {/* Particle Background */}
       <ParticleNetwork
