@@ -7,9 +7,9 @@ import ResultsSection from '@/components/services/multi-channel/ResultsSection';
 import Testimonials from '@/components/home/Testimonials';
 
 export const metadata = {
-  title: 'Multi-Channel Inbox — Pruve',
+  title: 'Multi-Channel AI Agent — One Brain Across Every Platform',
   description:
-    'Deploy a single AI agent across WhatsApp, Instagram, Telegram, email, and web chat — with a unified inbox for every conversation.',
+    'Deploy one AI agent across WhatsApp, Instagram, Facebook, Telegram, email, and web chat. Unified inbox, cross-channel context, and instant responses on every platform.',
 };
 
 export default function MultiChannelPage() {

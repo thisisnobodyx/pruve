@@ -7,9 +7,9 @@ import ResultsSection from '@/components/services/seo/ResultsSection';
 import Testimonials from '@/components/home/Testimonials';
 
 export const metadata = {
-  title: 'SEO Services — Pruve',
+  title: 'SEO Services — Get Found on Google and Drive Organic Traffic',
   description:
-    'Dominate search results with data-driven SEO. Technical audits, keyword strategy, content optimization, and local SEO. Get a quote from Pruve.',
+    'Data-driven SEO that gets your business to the top of Google. Technical audits, keyword strategy, content optimization, and local SEO. Request a free SEO audit from Pruve.',
 };
 
 export default function SEORoute() {

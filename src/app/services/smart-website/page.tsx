@@ -7,9 +7,9 @@ import Testimonials from '@/components/home/Testimonials';
 import ScrollToTop from '@/components/shared/ScrollToTop';
 
 export const metadata = {
-  title: 'Smart Website — Pruve',
+  title: 'Smart Website — AI-Powered Sites That Chat, Personalize & Convert',
   description:
-    'AI-powered websites that chat with visitors, personalize content in real time, capture leads automatically, and convert browsers into buyers.',
+    'AI-powered websites that chat with visitors, personalize content in real time, capture leads automatically, and turn browsers into paying customers.',
 };
 
 export default function SmartWebsitePage() {

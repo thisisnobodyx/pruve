@@ -7,9 +7,9 @@ import ResultsSection from '@/components/services/web-design/ResultsSection';
 import Testimonials from '@/components/home/Testimonials';
 
 export const metadata = {
-  title: 'Web Design — Pruve',
+  title: 'Custom Web Design — Fast, Mobile-First Websites That Convert',
   description:
-    'Custom-designed, high-converting websites built for speed, mobile, and results. Get a quote from Pruve.',
+    'Get a custom-designed website built for speed, mobile, and conversions. Pruve creates high-performing websites that turn visitors into paying customers. Request a free quote.',
 };
 
 export default function WebDesignRoute() {

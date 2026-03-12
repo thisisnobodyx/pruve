@@ -7,9 +7,9 @@ import ResultsSection from '@/components/services/lead-capture/ResultsSection';
 import Testimonials from '@/components/home/Testimonials';
 
 export const metadata = {
-  title: 'Lead Capture — Pruve',
+  title: 'AI Lead Capture — Qualify, Score & Follow Up Automatically',
   description:
-    'Automated lead capture, qualification, and follow-up sequences that ensure no potential customer slips through the cracks.',
+    'Never lose a lead again. Pruve\'s AI captures every inquiry, scores and qualifies them, sends intake forms, and follows up on autopilot until they convert.',
 };
 
 export default function LeadCapturePage() {

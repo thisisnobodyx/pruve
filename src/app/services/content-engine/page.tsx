@@ -7,8 +7,9 @@ import ResultsSection from '@/components/services/content-engine/ResultsSection'
 import Testimonials from '@/components/home/Testimonials';
 
 export const metadata = {
-  title: 'Content Engine — Pruve',
-  description: 'AI-generated blog posts, social captions, email campaigns, and ad copy — tailored to your brand voice.',
+  title: 'AI Content Engine — Blog Posts, Social Media & Email on Autopilot',
+  description:
+    'AI-powered content creation tailored to your brand voice. Automated blog posts, social captions, email campaigns, and ad copy — produced daily without lifting a finger.',
 };
 
 export default function ContentEnginePage() {

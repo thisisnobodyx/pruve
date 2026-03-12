@@ -14,34 +14,39 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Pruve.ca — AI Automation Agency",
-    template: "%s | Pruve.ca",
+    default: "Pruve — AI Automation Agency for Small Business",
+    template: "%s | Pruve",
   },
   description:
-    "We build AI agents, automations, and intelligent systems that run your business while you focus on what matters.",
+    "Pruve builds AI employees that answer calls, capture leads, manage social media, and automate your operations — so you can focus on growing your business.",
   keywords: [
-    "AI automation",
+    "AI automation agency",
+    "AI employees for small business",
     "AI agents",
     "WhatsApp bot",
     "business automation",
     "workflow automation",
     "AI receptionist",
+    "lead capture automation",
+    "social media AI",
+    "web design agency",
+    "SEO services",
   ],
-  authors: [{ name: "Pruve.ca" }],
+  authors: [{ name: "Pruve" }],
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_CA",
     url: "https://pruve.ca",
-    siteName: "Pruve.ca",
-    title: "Pruve.ca — AI Automation Agency",
+    siteName: "Pruve",
+    title: "Pruve — AI Automation Agency for Small Business",
     description:
-      "We build AI agents, automations, and intelligent systems that run your business while you focus on what matters.",
+      "Pruve builds AI employees that answer calls, capture leads, manage social media, and automate your operations — so you can focus on growing your business.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pruve.ca — AI Automation Agency",
+    title: "Pruve — AI Automation Agency for Small Business",
     description:
-      "We build AI agents, automations, and intelligent systems that run your business while you focus on what matters.",
+      "Pruve builds AI employees that answer calls, capture leads, manage social media, and automate your operations — so you can focus on growing your business.",
   },
   robots: {
     index: true,

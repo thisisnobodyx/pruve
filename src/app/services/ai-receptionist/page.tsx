@@ -7,8 +7,9 @@ import ResultsSection from '@/components/services/ai-receptionist/ResultsSection
 import Testimonials from '@/components/home/Testimonials';
 
 export const metadata = {
-  title: 'AI Receptionist — Pruve',
-  description: 'AI receptionist that answers calls 24/7, books appointments, and never puts customers on hold.',
+  title: 'AI Receptionist — Answer Every Call 24/7, Book Appointments Automatically',
+  description:
+    'Never miss a call again. Pruve\'s AI receptionist answers calls 24/7, books appointments, sends confirmations, and fills cancelled slots — without putting a single customer on hold.',
 };
 
 export default function AIReceptionistPage() {

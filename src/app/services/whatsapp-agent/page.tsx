@@ -7,9 +7,9 @@ import ResultsSection from '@/components/services/whatsapp-agent/ResultsSection'
 import Testimonials from '@/components/home/Testimonials';
 
 export const metadata = {
-  title: 'WhatsApp Agent — Pruve',
+  title: 'AI WhatsApp Agent — Instant Replies, Bookings & Lead Capture 24/7',
   description:
-    'An AI-powered WhatsApp agent that responds to customers instantly, captures leads, takes bookings, and handles FAQs — all without human intervention.',
+    'An AI-powered WhatsApp agent that responds to customers instantly, captures leads, takes bookings, and handles FAQs — all without human intervention. Never miss a message again.',
 };
 
 export default function WhatsAppAgentPage() {

@@ -7,9 +7,9 @@ import ResultsSection from '@/components/services/workflow/ResultsSection';
 import Testimonials from '@/components/home/Testimonials';
 
 export const metadata = {
-  title: 'Workflow Automation — Pruve',
+  title: 'Workflow Automation — Connect Your Tools & Eliminate Manual Work',
   description:
-    'Custom workflow automations that connect your tools, eliminate manual busywork, and keep your business running like clockwork.',
+    'Custom AI workflow automations that connect all your tools, eliminate manual data entry, classify emails, and keep your business running like clockwork. Zero busywork.',
 };
 
 export default function WorkflowPage() {

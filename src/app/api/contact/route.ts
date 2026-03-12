@@ -1,14 +1,18 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-const OWNER_EMAIL = process.env.CONTACT_EMAIL || 'hello@pruve.ca';
+// Force dynamic so env vars are read at runtime, not baked in at build
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   try {
     const apiKey = process.env.RESEND_API_KEY;
+    const OWNER_EMAIL = process.env.CONTACT_EMAIL || 'info@pruve.ca';
+
     if (!apiKey) {
+      console.error('RESEND_API_KEY is not set. Available env keys:', Object.keys(process.env).filter(k => k.includes('RESEND') || k.includes('CONTACT')));
       return NextResponse.json(
-        { error: 'Email service not configured. Please contact us directly at hello@pruve.ca' },
+        { error: 'Email service not configured. Please contact us directly at info@pruve.ca' },
         { status: 500 },
       );
     }
