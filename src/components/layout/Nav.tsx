@@ -15,12 +15,15 @@ const agents = [
   { label: 'Smart Website', href: '/services/smart-website', icon: '🌐', color: '#7C3AED', desc: 'Websites that convert & chat' },
   { label: 'Workflow Automation', href: '/services/workflow', icon: '⚡', color: '#FF6B35', desc: 'Automate repetitive tasks' },
   { label: 'Social Media', href: '/services/social-media', icon: '📱', color: '#EC4899', desc: 'AI-powered social presence' },
+];
+
+const services = [
   { label: 'Web Design', href: '/services/web-design', icon: '🎨', color: '#7C3AED', desc: 'Custom sites that convert' },
   { label: 'SEO Services', href: '/services/seo', icon: '🔍', color: '#C8F135', desc: 'Dominate Google search results' },
 ];
 
 const navLinks = [
-  { label: 'Services', href: '/services', hasDropdown: true },
+  { label: 'Agents', href: '/services', hasDropdown: true },
   { label: 'AI Employees', href: '/ai-employees' },
   { label: 'Experience', href: '/experience' },
   { label: 'Pricing', href: '/pricing' },
@@ -189,7 +192,9 @@ export default function Nav() {
           >
             <div className="max-w-[1400px] mx-auto px-6">
               <div className="bg-bg-2/95 backdrop-blur-2xl border border-border rounded-2xl p-8 shadow-2xl shadow-black/40">
-                <div className="grid grid-cols-5 gap-3">
+                {/* AI Agents */}
+                <h5 className="font-display font-extrabold text-xs uppercase tracking-[0.2em] text-dim mb-4">AI Agents</h5>
+                <div className="grid grid-cols-4 gap-3">
                   {agents.map((agent) => (
                     <Link
                       key={agent.href}
@@ -212,7 +217,36 @@ export default function Nav() {
                     </Link>
                   ))}
                 </div>
-                <div className="mt-6 pt-4 border-t border-border flex items-center justify-between">
+
+                {/* Services */}
+                <div className="mt-5 pt-5 border-t border-border">
+                  <h5 className="font-display font-extrabold text-xs uppercase tracking-[0.2em] text-dim mb-4">Services</h5>
+                  <div className="grid grid-cols-4 gap-3">
+                    {services.map((service) => (
+                      <Link
+                        key={service.href}
+                        href={service.href}
+                        onClick={() => setMegaOpen(false)}
+                        className="group flex items-start gap-3 p-3 rounded-xl transition-all duration-200 hover:bg-white/[0.04]"
+                      >
+                        <div
+                          className="w-10 h-10 rounded-lg flex items-center justify-center text-lg shrink-0"
+                          style={{ background: `${service.color}15` }}
+                        >
+                          {service.icon}
+                        </div>
+                        <div>
+                          <div className="text-sm font-medium text-white group-hover:text-accent transition-colors">
+                            {service.label}
+                          </div>
+                          <div className="text-xs text-dim mt-0.5">{service.desc}</div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-5 pt-4 border-t border-border flex items-center justify-between">
                   <p className="text-dim text-xs">Not sure which agent you need?</p>
                   <Link
                     href="/ai-employees"
@@ -239,9 +273,9 @@ export default function Nav() {
             className="fixed inset-0 z-40 bg-bg-2 flex flex-col items-center justify-center"
           >
             <nav className="flex flex-col items-center gap-6">
-              {/* Services group */}
+              {/* AI Agents group */}
               <div className="flex flex-col items-center gap-3 mb-2">
-                <span className="text-dim text-xs uppercase tracking-widest">Services</span>
+                <span className="text-dim text-xs uppercase tracking-widest">AI Agents</span>
                 <div className="grid grid-cols-2 gap-2">
                   {agents.map((agent) => (
                     <Link
@@ -252,6 +286,24 @@ export default function Nav() {
                     >
                       <span>{agent.icon}</span>
                       <span className="text-xs">{agent.label}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* Services group */}
+              <div className="flex flex-col items-center gap-3 mb-2">
+                <span className="text-dim text-xs uppercase tracking-widest">Services</span>
+                <div className="grid grid-cols-2 gap-2">
+                  {services.map((service) => (
+                    <Link
+                      key={service.href}
+                      href={service.href}
+                      onClick={closeMobile}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-bg-card/50 text-sm text-white hover:text-accent transition-colors"
+                    >
+                      <span>{service.icon}</span>
+                      <span className="text-xs">{service.label}</span>
                     </Link>
                   ))}
                 </div>
