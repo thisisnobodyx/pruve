@@ -37,6 +37,7 @@ const serviceOptions = [
   { id: 'ai-employee', emoji: '🤖', label: 'AI Employee', color: '#7C3AED' },
   { id: 'ai-agent', emoji: '⚡', label: 'AI Agent', color: '#7DF9C0' },
   { id: 'web-design', emoji: '🎨', label: 'Web Design', color: '#C8F135' },
+  { id: 'seo', emoji: '🔍', label: 'SEO Services', color: '#C8F135' },
 ];
 
 function TeamVisualization({ step, form }: { step: number; form: FormData }) {
@@ -307,7 +308,7 @@ export default function ContactPage() {
             animate={{ opacity: 1, y: 0 }}
             className="font-mono text-sm tracking-widest uppercase text-accent mb-4 block"
           >
-            {step < 5 ? 'BUILD YOUR AI TEAM' : 'SUCCESS'}
+            {step < 5 ? 'GET STARTED' : 'SUCCESS'}
           </motion.span>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -317,9 +318,9 @@ export default function ContactPage() {
           >
             {step < 5 ? (
               <>
-                Design your custom
+                Let&apos;s build something
                 <br />
-                <span className="text-accent">AI workforce.</span>
+                <span className="text-accent">that works for you.</span>
               </>
             ) : (
               <>
@@ -336,7 +337,7 @@ export default function ContactPage() {
               transition={{ delay: 0.2 }}
               className="text-dim text-lg"
             >
-              4 quick steps. Then we build your AI team in 48 hours.
+              4 quick steps. Then we get to work within 48 hours.
             </motion.p>
           )}
         </div>
@@ -424,7 +425,7 @@ export default function ContactPage() {
                 >
                   <div>
                     <h2 className="text-xl font-extrabold text-white mb-1">Your business</h2>
-                    <p className="text-dim text-sm">Help us customize your AI team.</p>
+                    <p className="text-dim text-sm">Help us understand your needs.</p>
                   </div>
                   <div className="space-y-4">
                     <div>
@@ -495,6 +496,7 @@ export default function ContactPage() {
                       { id: 'ai-employee', emoji: '🤖', label: 'AI Employee', desc: 'A full-time digital worker that handles communication, books appointments, follows up leads, and grows your business 24/7.' },
                       { id: 'ai-agent', emoji: '⚡', label: 'AI Agent', desc: 'A standalone intelligent agent for a specific task — WhatsApp bot, receptionist, lead capture, or content creation.' },
                       { id: 'web-design', emoji: '🎨', label: 'Web Design', desc: 'Custom website design, e-commerce store, or smart website with AI chat — built to convert.' },
+                      { id: 'seo', emoji: '🔍', label: 'SEO Services', desc: 'Data-driven SEO to get your business on page one — technical audits, keyword strategy, local SEO, and ongoing optimization.' },
                     ].map((service) => {
                       const isSelected = form.serviceType === service.id;
                       return (

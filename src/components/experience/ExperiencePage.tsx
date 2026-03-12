@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import IndustrySelector from './IndustrySelector';
 import DaySimulation from './DaySimulation';
 import CapabilityExplorer from './CapabilityExplorer';
+import ComplianceSection from './ComplianceSection';
 import ImpactSection from './ImpactSection';
 
 export default function ExperiencePage() {
@@ -28,6 +29,7 @@ export default function ExperiencePage() {
         {selectedIndustry && <DaySimulation industryId={selectedIndustry} />}
       </div>
       <CapabilityExplorer selectedIndustry={selectedIndustry} />
+      <ComplianceSection selectedIndustry={selectedIndustry} />
       <ImpactSection selectedIndustry={selectedIndustry} />
     </>
   );

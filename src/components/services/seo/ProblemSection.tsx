@@ -16,22 +16,24 @@ function clamp(v: number, min = 0, max = 1) {
 
 export default function ProblemSection() {
   return (
-    <ScrollPinSection pinDuration={400} className="bg-bg">
+    <ScrollPinSection pinDuration={280} className="bg-bg">
       {(progress) => {
-        // Phase 1: 0–0.25   invisible website
-        // Phase 2: 0.25–0.5 stat overlay
-        // Phase 3: 0.5–0.6  crossfade
-        // Phase 4: 0.6–1.0  climbing chart
+        // Tighter phases — less scroll needed
+        // Phase 1: 0–0.2   invisible website
+        // Phase 2: 0.2–0.4 stat overlay (shorter!)
+        // Phase 3: 0.4–0.5 crossfade
+        // Phase 4: 0.5–1.0 climbing chart + tagline appears with chart
 
-        const invisOpacity = clamp(progress / 0.15) * clamp(1 - (progress - 0.4) / 0.15);
-        const resultOpacity = (i: number) => clamp((invisOpacity > 0.3 ? (progress - 0.08 - i * 0.06) / 0.08 : 0)) * clamp(1 - (progress - 0.22) / 0.1);
-        const subTextOpacity = clamp((progress - 0.18) / 0.07) * clamp(1 - (progress - 0.28) / 0.08);
-        const statOverlay = clamp((progress - 0.28) / 0.1) * clamp(1 - (progress - 0.5) / 0.1);
-        const chartOpacity = clamp((progress - 0.55) / 0.15);
-        const chartPhase = clamp((progress - 0.55) / 0.4);
+        const invisOpacity = clamp(progress / 0.12) * clamp(1 - (progress - 0.3) / 0.12);
+        const resultOpacity = (i: number) => clamp((progress > 0.04 ? (progress - 0.04 - i * 0.05) / 0.06 : 0)) * clamp(1 - (progress - 0.18) / 0.08);
+        const subTextOpacity = clamp((progress - 0.14) / 0.05) * clamp(1 - (progress - 0.22) / 0.06);
+        const statOverlay = clamp((progress - 0.22) / 0.08) * clamp(1 - (progress - 0.4) / 0.08);
+        const chartOpacity = clamp((progress - 0.45) / 0.1);
+        const chartPhase = clamp((progress - 0.45) / 0.5);
         const yourRank = Math.round(50 - chartPhase * 49);
-        const compLineScale = clamp((chartPhase - 0.1) / 0.2);
-        const taglineOpacity = clamp((progress - 0.88) / 0.08);
+        const compLineScale = clamp((chartPhase - 0.05) / 0.15);
+        // Tagline shows as soon as chart is visible
+        const taglineOpacity = clamp((progress - 0.52) / 0.08);
 
         return (
           <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
@@ -108,8 +110,18 @@ export default function ProblemSection() {
               style={{ opacity: chartOpacity }}
             >
               <div className="w-full max-w-2xl px-6">
+                {/* Tagline ABOVE chart — shows immediately */}
+                <div className="text-center mb-6" style={{ opacity: taglineOpacity }}>
+                  <div className="text-3xl md:text-5xl font-extrabold mb-2" style={{ color: ACCENT }}>
+                    {yourRank === 1 ? '#1 on Google.' : 'Climbing to #1...'}
+                  </div>
+                  <p className="text-dim text-base">
+                    {yourRank === 1 ? 'Consistent growth. Real results. No shortcuts.' : `Currently #${yourRank} — and rising fast.`}
+                  </p>
+                </div>
+
                 {/* Ranking chart */}
-                <div className="relative h-[280px] bg-bg-card/50 border border-border rounded-2xl p-6 overflow-hidden">
+                <div className="relative h-[260px] bg-bg-card/50 border border-border rounded-2xl p-6 overflow-hidden">
                   {/* Y-axis labels */}
                   <div className="absolute left-2 top-6 bottom-6 flex flex-col justify-between text-[10px] text-dim">
                     <span>#1</span>
@@ -131,7 +143,7 @@ export default function ProblemSection() {
                       className="absolute left-10 right-4 h-0.5 rounded origin-left"
                       style={{
                         background: `${comp.color}40`,
-                        top: `${6 + (comp.position / 50) * (280 - 48)}px`,
+                        top: `${6 + (comp.position / 50) * (260 - 48)}px`,
                         transform: `scaleX(${compLineScale})`,
                       }}
                     />
@@ -143,7 +155,7 @@ export default function ProblemSection() {
                     style={{
                       background: `linear-gradient(90deg, ${ACCENT}60, ${ACCENT})`,
                       boxShadow: `0 0 20px ${ACCENT}40`,
-                      top: `${6 + ((yourRank - 1) / 49) * (280 - 48)}px`,
+                      top: `${6 + ((yourRank - 1) / 49) * (260 - 48)}px`,
                     }}
                   />
 
@@ -153,7 +165,7 @@ export default function ProblemSection() {
                     style={{
                       background: `${ACCENT}20`,
                       color: ACCENT,
-                      top: `${6 + ((yourRank - 1) / 49) * (280 - 48) - 14}px`,
+                      top: `${6 + ((yourRank - 1) / 49) * (260 - 48) - 14}px`,
                     }}
                   >
                     <span>#{yourRank}</span>
@@ -173,14 +185,6 @@ export default function ProblemSection() {
                       </div>
                     ))}
                   </div>
-                </div>
-
-                {/* Bottom message */}
-                <div className="text-center mt-8" style={{ opacity: taglineOpacity }}>
-                  <div className="text-4xl md:text-5xl font-extrabold mb-3" style={{ color: ACCENT }}>
-                    {yourRank === 1 ? '#1 on Google.' : 'Climbing to #1...'}
-                  </div>
-                  <p className="text-dim text-lg">Consistent growth. Real results. No shortcuts.</p>
                 </div>
               </div>
             </div>

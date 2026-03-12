@@ -13,20 +13,7 @@ interface AuditItem {
   score: number;
 }
 
-const auditItems: AuditItem[] = [
-  { category: 'Speed', label: 'Page Load Time', status: 'fail', detail: '6.3s — should be under 2.5s', score: 25 },
-  { category: 'Speed', label: 'Core Web Vitals', status: 'warning', detail: 'LCP: 4.1s, CLS: 0.18', score: 45 },
-  { category: 'On-Page', label: 'Meta Titles', status: 'fail', detail: '12 pages missing unique titles', score: 20 },
-  { category: 'On-Page', label: 'Header Structure', status: 'warning', detail: 'Multiple H1 tags on 3 pages', score: 55 },
-  { category: 'On-Page', label: 'Image Alt Text', status: 'fail', detail: '47 images missing alt attributes', score: 10 },
-  { category: 'Technical', label: 'SSL Certificate', status: 'pass', detail: 'Valid HTTPS with HSTS', score: 100 },
-  { category: 'Technical', label: 'Sitemap', status: 'fail', detail: 'No sitemap.xml found', score: 0 },
-  { category: 'Technical', label: 'Robots.txt', status: 'warning', detail: 'Exists but blocking CSS/JS', score: 50 },
-  { category: 'Local', label: 'Google Business', status: 'warning', detail: 'Profile incomplete — 4 fields missing', score: 40 },
-  { category: 'Local', label: 'NAP Consistency', status: 'fail', detail: 'Address differs on 6 directories', score: 15 },
-];
-
-const categories = ['All', 'Speed', 'On-Page', 'Technical', 'Local'];
+const categories = ['All', 'Speed', 'On-Page', 'Technical'];
 
 function StatusBadge({ status }: { status: 'pass' | 'warning' | 'fail' }) {
   const config = {
@@ -63,9 +50,12 @@ function ScoreBar({ score, delay }: { score: number; delay: number }) {
 export default function InteractiveDemo() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [isScanning, setIsScanning] = useState(false);
-  const [scannedCount, setScannedCount] = useState(0);
+  const [scanProgress, setScanProgress] = useState(0);
   const [showResults, setShowResults] = useState(false);
   const [inputUrl, setInputUrl] = useState('');
+  const [auditItems, setAuditItems] = useState<AuditItem[]>([]);
+  const [overallScore, setOverallScore] = useState(0);
+  const [error, setError] = useState('');
 
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'start 0.3'] });
@@ -76,25 +66,44 @@ export default function InteractiveDemo() {
     ? auditItems
     : auditItems.filter((item) => item.category === activeCategory);
 
-  const overallScore = Math.round(auditItems.reduce((sum, item) => sum + item.score, 0) / auditItems.length);
-
-  const startScan = () => {
-    if (!inputUrl.trim()) return;
+  const startScan = async () => {
+    const url = inputUrl.trim();
+    if (!url) return;
+    setError('');
     setIsScanning(true);
     setShowResults(false);
-    setScannedCount(0);
+    setScanProgress(0);
+    setAuditItems([]);
 
-    const interval = setInterval(() => {
-      setScannedCount((prev) => {
-        if (prev >= auditItems.length) {
-          clearInterval(interval);
-          setIsScanning(false);
-          setShowResults(true);
-          return prev;
-        }
-        return prev + 1;
-      });
-    }, 300);
+    // Animate progress bar while waiting
+    const progressInterval = setInterval(() => {
+      setScanProgress((p) => Math.min(p + 2, 90));
+    }, 200);
+
+    try {
+      const res = await fetch(`/api/seo-audit?url=${encodeURIComponent(url)}`);
+      const data = await res.json();
+
+      clearInterval(progressInterval);
+
+      if (!res.ok) {
+        setError(data.error || 'Audit failed');
+        setIsScanning(false);
+        return;
+      }
+
+      setScanProgress(100);
+      await new Promise((r) => setTimeout(r, 300));
+
+      setAuditItems(data.items || []);
+      setOverallScore(data.overallScore || 0);
+      setIsScanning(false);
+      setShowResults(true);
+    } catch (err: any) {
+      clearInterval(progressInterval);
+      setError(err.message || 'Network error');
+      setIsScanning(false);
+    }
   };
 
   return (
@@ -102,13 +111,13 @@ export default function InteractiveDemo() {
       <div className="max-w-4xl mx-auto">
         <motion.div style={{ y: titleY, opacity: titleOpacity }} className="text-center mb-12">
           <span className="font-mono text-sm tracking-widest uppercase mb-3 block" style={{ color: ACCENT }}>
-            SEO AUDIT TOOL
+            LIVE SEO AUDIT
           </span>
           <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4">
             See what Google sees.
           </h2>
           <p className="text-dim text-lg max-w-xl mx-auto">
-            Enter any URL and watch our AI audit it in real time.
+            Enter any URL and get a real SEO audit powered by Google Lighthouse.
           </p>
         </motion.div>
 
@@ -144,6 +153,13 @@ export default function InteractiveDemo() {
           </motion.button>
         </motion.div>
 
+        {/* Error */}
+        {error && (
+          <div className="text-center mb-6">
+            <span className="text-[#FF4545] text-sm">{error}</span>
+          </div>
+        )}
+
         {/* Scanning animation */}
         <AnimatePresence>
           {isScanning && (
@@ -157,10 +173,18 @@ export default function InteractiveDemo() {
                 <motion.div
                   className="h-full rounded-full"
                   style={{ background: ACCENT }}
-                  animate={{ width: `${(scannedCount / auditItems.length) * 100}%` }}
+                  animate={{ width: `${scanProgress}%` }}
                 />
               </div>
-              <span className="text-dim text-sm">Scanning {scannedCount}/{auditItems.length} checks...</span>
+              <span className="text-dim text-sm">
+                {scanProgress < 30
+                  ? 'Connecting to site...'
+                  : scanProgress < 60
+                    ? 'Analyzing on-page SEO...'
+                    : scanProgress < 90
+                      ? 'Running performance checks...'
+                      : 'Finalizing results...'}
+              </span>
             </motion.div>
           )}
         </AnimatePresence>
@@ -190,32 +214,34 @@ export default function InteractiveDemo() {
                 </div>
                 <div>
                   <div className="text-white text-lg font-bold">Overall SEO Score</div>
-                  <div className="text-dim text-sm">{auditItems.filter((i) => i.status === 'fail').length} critical issues found</div>
+                  <div className="text-dim text-sm">
+                    {auditItems.filter((i) => i.status === 'fail').length} critical issues found
+                  </div>
                 </div>
               </div>
 
               {/* Category filters */}
               <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-                {categories.map((cat) => (
-                  <motion.button
-                    key={cat}
-                    onClick={() => setActiveCategory(cat)}
-                    whileTap={{ scale: 0.95 }}
-                    className={`px-4 py-2 rounded-full text-xs font-bold border whitespace-nowrap transition-all ${
-                      activeCategory === cat
-                        ? 'text-black border-transparent'
-                        : 'text-dim border-border hover:border-white/20'
-                    }`}
-                    style={activeCategory === cat ? { background: ACCENT } : {}}
-                  >
-                    {cat}
-                    {cat !== 'All' && (
-                      <span className="ml-1.5 opacity-60">
-                        ({auditItems.filter((i) => i.category === cat).length})
-                      </span>
-                    )}
-                  </motion.button>
-                ))}
+                {categories.map((cat) => {
+                  const count = cat === 'All' ? auditItems.length : auditItems.filter((i) => i.category === cat).length;
+                  if (cat !== 'All' && count === 0) return null;
+                  return (
+                    <motion.button
+                      key={cat}
+                      onClick={() => setActiveCategory(cat)}
+                      whileTap={{ scale: 0.95 }}
+                      className={`px-4 py-2 rounded-full text-xs font-bold border whitespace-nowrap transition-all ${
+                        activeCategory === cat
+                          ? 'text-black border-transparent'
+                          : 'text-dim border-border hover:border-white/20'
+                      }`}
+                      style={activeCategory === cat ? { background: ACCENT } : {}}
+                    >
+                      {cat}
+                      <span className="ml-1.5 opacity-60">({count})</span>
+                    </motion.button>
+                  );
+                })}
               </div>
 
               {/* Audit items */}
@@ -266,10 +292,9 @@ export default function InteractiveDemo() {
           )}
         </AnimatePresence>
 
-        {/* Powered by */}
         {showResults && (
           <div className="mt-4 text-center">
-            <span className="text-dim text-xs">Powered by Pruve AI</span>
+            <span className="text-dim text-xs">Powered by Google Lighthouse + Pruve AI</span>
           </div>
         )}
       </div>
