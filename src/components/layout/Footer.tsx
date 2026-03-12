@@ -7,18 +7,18 @@ import { ArrowRight } from 'lucide-react';
 const serviceLinks = [
   { label: 'WhatsApp Agent', href: '/services/whatsapp-agent' },
   { label: 'AI Receptionist', href: '/services/ai-receptionist' },
-  { label: 'Multi-Channel', href: '/services/multi-channel' },
+  { label: 'Multi-Channel Inbox', href: '/services/multi-channel' },
   { label: 'Lead Capture', href: '/services/lead-capture' },
   { label: 'Content Engine', href: '/services/content-engine' },
-  { label: 'Workflow', href: '/services/workflow' },
+  { label: 'Smart Website', href: '/services/smart-website' },
+  { label: 'Workflow Automation', href: '/services/workflow' },
   { label: 'Social Media', href: '/services/social-media' },
 ];
 
 const companyLinks = [
-  { label: 'About', href: '/about' },
-  { label: 'Work', href: '/work' },
+  { label: 'AI Employees', href: '/ai-employees' },
   { label: 'Pricing', href: '/pricing' },
-  { label: 'Blog', href: '/blog' },
+  { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },
 ];
 
@@ -29,7 +29,6 @@ export default function Footer() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    // TODO: integrate with newsletter service
     setSubmitted(true);
     setEmail('');
     setTimeout(() => setSubmitted(false), 3000);
@@ -38,7 +37,6 @@ export default function Footer() {
   return (
     <footer className="bg-bg-2 border-t border-border">
       <div className="max-w-[1400px] mx-auto px-6 py-20">
-        {/* Main Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
           {/* Column 1 - Brand */}
           <div className="lg:pr-8">
@@ -50,14 +48,14 @@ export default function Footer() {
               <span className="text-accent">.</span>
             </Link>
             <p className="text-dim text-sm font-body font-light leading-relaxed max-w-xs">
-              We automate your business so you can focus on what matters.
+              AI agents that handle your calls, messages, and workflows &mdash; so you can focus on growing your business.
             </p>
           </div>
 
           {/* Column 2 - Services */}
           <div>
             <h4 className="font-display font-extrabold text-xs uppercase tracking-[0.2em] text-white mb-6">
-              Services
+              AI Employees
             </h4>
             <ul className="flex flex-col gap-3">
               {serviceLinks.map((link) => (
@@ -105,7 +103,7 @@ export default function Footer() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Get AI automation tips"
+                placeholder="your@email.com"
                 className="flex-1 bg-bg-card border border-border rounded-l-input px-4 py-2.5 text-sm font-body font-light text-white placeholder:text-dim/60 focus:outline-none focus:border-accent/40 transition-colors duration-300"
                 required
               />
