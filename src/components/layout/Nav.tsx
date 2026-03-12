@@ -14,6 +14,8 @@ const agents = [
   { label: 'Smart Website', href: '/services/smart-website', icon: '🌐', color: '#7C3AED', desc: 'Websites that convert & chat' },
   { label: 'Workflow Automation', href: '/services/workflow', icon: '⚡', color: '#FF6B35', desc: 'Automate repetitive tasks' },
   { label: 'Social Media', href: '/services/social-media', icon: '📱', color: '#EC4899', desc: 'AI-powered social presence' },
+  { label: 'Web Design', href: '/services/web-design', icon: '🎨', color: '#7C3AED', desc: 'Custom sites that convert' },
+  { label: 'SEO Services', href: '/services/seo', icon: '🔍', color: '#C8F135', desc: 'Dominate Google search results' },
 ];
 
 const navLinks = [
@@ -180,7 +182,7 @@ export default function Nav() {
           >
             <div className="max-w-[1400px] mx-auto px-6">
               <div className="bg-bg-2/95 backdrop-blur-2xl border border-border rounded-2xl p-8 shadow-2xl shadow-black/40">
-                <div className="grid grid-cols-4 gap-3">
+                <div className="grid grid-cols-5 gap-3">
                   {agents.map((agent) => (
                     <Link
                       key={agent.href}

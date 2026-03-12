@@ -13,6 +13,8 @@ import {
   Layout,
   GitBranch,
   Instagram,
+  Palette,
+  Search,
 } from 'lucide-react';
 import MagneticButton from '@/components/shared/MagneticButton';
 import Starfield from '@/components/shared/Starfield';
@@ -26,6 +28,8 @@ const iconMap: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>
   Layout,
   GitBranch,
   Instagram,
+  Palette,
+  Search,
 };
 
 interface Feature {

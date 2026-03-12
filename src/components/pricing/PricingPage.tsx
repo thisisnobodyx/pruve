@@ -251,13 +251,14 @@ const agentCards: AgentCard[] = [
 interface ProjectRow {
   name: string;
   price: string;
+  href?: string;
 }
 
 const projects: ProjectRow[] = [
   { name: 'AI Business Audit', price: '$497 (credited to setup fee)' },
-  { name: 'Custom Website Design', price: 'Request Quote' },
-  { name: 'E-commerce Store', price: 'Request Quote' },
-  { name: 'SEO Setup & Strategy', price: 'Request Quote' },
+  { name: 'Custom Website Design', price: 'Request Quote', href: '/services/web-design' },
+  { name: 'E-commerce Store', price: 'Request Quote', href: '/services/web-design' },
+  { name: 'SEO Setup & Strategy', price: 'Request Quote', href: '/services/seo' },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -805,7 +806,7 @@ function OneTimeProjectsSection() {
               </span>
               {project.price === 'Request Quote' ? (
                 <Link
-                  href="/contact"
+                  href={project.href || '/contact'}
                   className="text-accent font-mono text-sm font-bold shrink-0 ml-4 hover:text-accent/80 transition-colors"
                 >
                   Request Quote &rarr;

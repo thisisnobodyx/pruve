@@ -9,6 +9,8 @@ import {
   Target,
   PenTool,
   Instagram,
+  Palette,
+  Search,
   type LucideIcon,
 } from 'lucide-react';
 import {
@@ -23,7 +25,7 @@ interface Offering {
   description: string;
   href: string;
   accentColor: string;
-  tag: 'employee' | 'agent';
+  tag: 'employee' | 'agent' | 'service';
 }
 
 const offerings: Offering[] = [
@@ -91,6 +93,22 @@ const offerings: Offering[] = [
     accentColor: '#EC4899',
     tag: 'agent',
   },
+  {
+    icon: Palette,
+    name: 'Web Design',
+    description: 'Custom websites built to convert visitors into customers.',
+    href: '/services/web-design',
+    accentColor: '#7C3AED',
+    tag: 'service',
+  },
+  {
+    icon: Search,
+    name: 'SEO Services',
+    description: 'Dominate Google and drive organic traffic that converts.',
+    href: '/services/seo',
+    accentColor: '#C8F135',
+    tag: 'service',
+  },
 ];
 
 function OfferingCard({ offering, index }: { offering: Offering; index: number }) {
@@ -130,12 +148,12 @@ function OfferingCard({ offering, index }: { offering: Offering; index: number }
           <span
             className="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full border"
             style={{
-              color: offering.tag === 'employee' ? '#7C3AED' : '#7DF9C0',
-              borderColor: offering.tag === 'employee' ? '#7C3AED25' : '#7DF9C025',
-              background: offering.tag === 'employee' ? '#7C3AED08' : '#7DF9C008',
+              color: offering.tag === 'employee' ? '#7C3AED' : offering.tag === 'service' ? '#F59E0B' : '#7DF9C0',
+              borderColor: offering.tag === 'employee' ? '#7C3AED25' : offering.tag === 'service' ? '#F59E0B25' : '#7DF9C025',
+              background: offering.tag === 'employee' ? '#7C3AED08' : offering.tag === 'service' ? '#F59E0B08' : '#7DF9C008',
             }}
           >
-            {offering.tag === 'employee' ? 'AI Employee' : 'AI Agent'}
+            {offering.tag === 'employee' ? 'AI Employee' : offering.tag === 'service' ? 'Service' : 'AI Agent'}
           </span>
         </div>
 
@@ -171,7 +189,7 @@ function OfferingCard({ offering, index }: { offering: Offering; index: number }
   );
 }
 
-/** Subtle parallax wrapper — bottom-row cards move slightly slower */
+/** Subtle parallax wrapper — rows move at different speeds */
 function ParallaxGrid() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -180,33 +198,49 @@ function ParallaxGrid() {
   });
 
   const yTop = useTransform(scrollYProgress, [0, 1], [30, -30]);
-  const yBottom = useTransform(scrollYProgress, [0, 1], [50, -10]);
+  const yMiddle = useTransform(scrollYProgress, [0, 1], [50, -10]);
+  const yBottom = useTransform(scrollYProgress, [0, 1], [60, -5]);
 
-  const topRow = offerings.slice(0, 4);
-  const bottomRow = offerings.slice(4);
+  const employees = offerings.filter((o) => o.tag === 'employee');
+  const agents = offerings.filter((o) => o.tag === 'agent');
+  const services = offerings.filter((o) => o.tag === 'service');
 
   return (
     <div ref={ref} className="max-w-6xl mx-auto">
-      {/* Top row — AI Employees + first agent */}
+      {/* Row 1 — AI Employees */}
       <motion.div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4"
         style={{ y: yTop }}
       >
-        {topRow.map((offering, index) => (
+        {employees.map((offering, index) => (
           <OfferingCard key={offering.name} offering={offering} index={index} />
         ))}
       </motion.div>
 
-      {/* Bottom row — AI Agents */}
+      {/* Row 2 — AI Agents */}
       <motion.div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
-        style={{ y: yBottom }}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-4"
+        style={{ y: yMiddle }}
       >
-        {bottomRow.map((offering, index) => (
+        {agents.map((offering, index) => (
           <OfferingCard
             key={offering.name}
             offering={offering}
-            index={index + 4}
+            index={index + 3}
+          />
+        ))}
+      </motion.div>
+
+      {/* Row 3 — Services (Web Design & SEO) */}
+      <motion.div
+        className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+        style={{ y: yBottom }}
+      >
+        {services.map((offering, index) => (
+          <OfferingCard
+            key={offering.name}
+            offering={offering}
+            index={index + 8}
           />
         ))}
       </motion.div>
@@ -229,10 +263,10 @@ export default function ServicesShowcase() {
       {/* Section header */}
       <motion.div style={{ y: titleY, opacity: titleOpacity }} className="text-center mb-16">
         <h2 className="font-display text-4xl md:text-5xl font-extrabold mb-4 text-white">
-          AI Employees &amp; Agents.
+          Everything your business needs.
         </h2>
         <p className="text-dim text-lg font-body max-w-xl mx-auto">
-          Hire a full-time AI Employee — or deploy a standalone agent for one specific job.
+          AI Employees, standalone agents, custom websites, and SEO — all under one roof.
         </p>
       </motion.div>
 
