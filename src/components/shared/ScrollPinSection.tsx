@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useState, type ReactNode } from 'react';
+import { useRef, useEffect, useState, useCallback, type ReactNode } from 'react';
 
 interface ScrollPinSectionProps {
   children: (progress: number) => ReactNode;
@@ -18,6 +18,19 @@ export default function ScrollPinSection({
   const containerRef = useRef<HTMLDivElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
+  const progressRef = useRef(0);
+  const rafRef = useRef<number | null>(null);
+
+  // Throttle React state updates to ~30fps max to prevent excessive re-renders
+  const scheduleUpdate = useCallback((value: number) => {
+    progressRef.current = value;
+    if (rafRef.current === null) {
+      rafRef.current = requestAnimationFrame(() => {
+        setProgress(progressRef.current);
+        rafRef.current = null;
+      });
+    }
+  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -39,25 +52,25 @@ export default function ScrollPinSection({
         start: `top ${NAV_HEIGHT}px`,
         end: `+=${pinDistancePx}`,
         pin: pin,
-        scrub: 1,
+        scrub: 0.5,
         onUpdate: (self) => {
-          setProgress(self.progress);
+          scheduleUpdate(self.progress);
         },
       });
     };
 
-    // Use requestAnimationFrame to ensure DOM is ready without a long delay
     const raf = requestAnimationFrame(() => {
       initGSAP();
     });
 
     return () => {
       cancelAnimationFrame(raf);
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
       if (trigger) {
         trigger.kill();
       }
     };
-  }, [pinDuration]);
+  }, [pinDuration, scheduleUpdate]);
 
   return (
     <div ref={containerRef} className={className}>
