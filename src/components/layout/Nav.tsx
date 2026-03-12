@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -74,10 +75,16 @@ export default function Nav() {
           {/* Logo */}
           <Link
             href="/"
-            className="font-display font-extrabold text-xl tracking-tight text-white relative z-50"
+            className="relative z-50"
           >
-            PRUVE
-            <span className="text-accent">.</span>
+            <Image
+              src="/logo.svg"
+              alt="Pruve"
+              width={120}
+              height={38}
+              className="h-8 w-auto"
+              priority
+            />
           </Link>
 
           {/* Desktop Navigation */}

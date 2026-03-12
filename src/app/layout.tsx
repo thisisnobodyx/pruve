@@ -14,7 +14,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Pruve — AI Automation Agency for Small Business",
+    default: "Pruve — AI Employees for Your Business",
     template: "%s | Pruve",
   },
   description:
@@ -38,13 +38,13 @@ export const metadata: Metadata = {
     locale: "en_CA",
     url: "https://pruve.ca",
     siteName: "Pruve",
-    title: "Pruve — AI Automation Agency for Small Business",
+    title: "Pruve — AI Employees for Your Business",
     description:
       "Pruve builds AI employees that answer calls, capture leads, manage social media, and automate your operations — so you can focus on growing your business.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pruve — AI Automation Agency for Small Business",
+    title: "Pruve — AI Employees for Your Business",
     description:
       "Pruve builds AI employees that answer calls, capture leads, manage social media, and automate your operations — so you can focus on growing your business.",
   },

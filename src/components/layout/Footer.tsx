@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 
 const serviceLinks = [
@@ -42,10 +43,15 @@ export default function Footer() {
           <div className="lg:pr-8">
             <Link
               href="/"
-              className="inline-block font-display font-extrabold text-xl tracking-tight text-white mb-4"
+              className="inline-block mb-4"
             >
-              PRUVE
-              <span className="text-accent">.</span>
+              <Image
+                src="/logo.svg"
+                alt="Pruve"
+                width={120}
+                height={38}
+                className="h-8 w-auto"
+              />
             </Link>
             <p className="text-dim text-sm font-body font-light leading-relaxed max-w-xs">
               AI agents that handle your calls, messages, and workflows &mdash; so you can focus on growing your business.
@@ -126,7 +132,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="mt-16 pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-dim text-xs font-body font-light">
-            &copy; {new Date().getFullYear()} Pruve.co &mdash; All rights reserved.
+            &copy; {new Date().getFullYear()} Pruve &mdash; All rights reserved.
           </p>
           <div className="flex items-center gap-4">
             <Link
