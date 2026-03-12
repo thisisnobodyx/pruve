@@ -106,17 +106,35 @@ function GoogleBadge({ rating, total }: { rating: number; total: number }) {
   );
 }
 
+const QUOTE_CHAR_LIMIT = 180;
+
 /* Single testimonial card */
 function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
+  const [expanded, setExpanded] = useState(false);
+  const isLong = testimonial.quote.length > QUOTE_CHAR_LIMIT;
+  const displayQuote = isLong && !expanded
+    ? testimonial.quote.slice(0, QUOTE_CHAR_LIMIT).trimEnd() + '…'
+    : testimonial.quote;
+
   return (
     <div className="bg-bg-card border border-border rounded-2xl p-6 md:p-8 h-full flex flex-col transition-all duration-300 hover:border-accent/15 hover:-translate-y-1">
       <span className="font-display text-4xl md:text-5xl text-accent/20 leading-none mb-3 md:mb-4 select-none">
         &ldquo;
       </span>
 
-      <p className="text-white/90 text-sm leading-relaxed mb-6 flex-1">
-        {testimonial.quote}
-      </p>
+      <div className="mb-6 flex-1">
+        <p className="text-white/90 text-sm leading-relaxed">
+          {displayQuote}
+        </p>
+        {isLong && (
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="text-accent text-xs font-medium mt-1.5 hover:underline transition-colors"
+          >
+            {expanded ? 'Show less' : 'Read more'}
+          </button>
+        )}
+      </div>
 
       <div className="border-t border-border pt-4">
         <div className="flex items-center gap-3 mb-2">
