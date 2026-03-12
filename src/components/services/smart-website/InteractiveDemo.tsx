@@ -147,7 +147,7 @@ function LeadSidebar({ leadInfo, messageCount }: { leadInfo: LeadInfo; messageCo
       {/* Powered by badge */}
       <div className="flex items-center gap-2 text-dim/50 text-xs pt-2">
         <div className="w-2 h-2 rounded-full" style={{ background: ACCENT }} />
-        Powered by Pruve AI &mdash; Responses from Claude
+        Powered by Pruve AI
       </div>
     </div>
   );

@@ -440,7 +440,7 @@ Example: {"score": 75, "temperature": "Hot", "actions": ["Send personalized demo
         {result && (
           <div className="flex items-center justify-center gap-2 text-dim/50 text-xs mt-6">
             <div className="w-2 h-2 rounded-full" style={{ background: ACCENT }} />
-            Powered by Pruve AI &mdash; Scored with Claude
+            Powered by Pruve AI
           </div>
         )}
       </motion.div>

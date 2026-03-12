@@ -911,7 +911,7 @@ export const retailIndustries: Industry[] = [
   /* ------------------------------------------------------------------ */
   {
     id: 'pet-store',
-    label: 'Pet Store / Grooming',
+    label: 'Pet Store',
     emoji: '🐕',
     category: 'Retail & E-Commerce',
     tagline: 'Every pup pampered, every pet parent informed, every grooming slot filled — your AI never misses a tail wag.',

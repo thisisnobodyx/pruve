@@ -2,10 +2,8 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
 import ParticleNetwork from '@/components/shared/ParticleNetwork';
 import MagneticButton from '@/components/shared/MagneticButton';
-import { tierRoles, type TierRole } from '@/components/ai-employees/data';
 
 /* ------------------------------------------------------------------ */
 /* DATA                                                                */
@@ -28,19 +26,22 @@ interface FormData {
   company: string;
   industry: string;
   size: string;
-  employeeTier: string;
+  serviceType: string;
   message: string;
 }
 
 /* ------------------------------------------------------------------ */
 /* TEAM VISUALIZATION: the "wow" element on the right side             */
 /* ------------------------------------------------------------------ */
-function TeamVisualization({ step, form }: { step: number; form: FormData }) {
-  const selectedRole = tierRoles.find((r) => r.id === form.employeeTier);
-  const industry = industries.find((i) => i.value === form.industry);
+const serviceOptions = [
+  { id: 'ai-employee', emoji: '🤖', label: 'AI Employee', color: '#7C3AED' },
+  { id: 'ai-agent', emoji: '⚡', label: 'AI Agent', color: '#7DF9C0' },
+  { id: 'web-design', emoji: '🎨', label: 'Web Design', color: '#C8F135' },
+];
 
-  // Calculate how many desks to show based on tier
-  const deskCount = !selectedRole ? 0 : selectedRole.id === 'operator' ? 1 : selectedRole.id === 'manager' ? 2 : 3;
+function TeamVisualization({ step, form }: { step: number; form: FormData }) {
+  const selectedService = serviceOptions.find((s) => s.id === form.serviceType);
+  const industry = industries.find((i) => i.value === form.industry);
 
   return (
     <div className="relative w-full h-full min-h-[400px] lg:min-h-[500px] flex items-center justify-center">
@@ -48,8 +49,8 @@ function TeamVisualization({ step, form }: { step: number; form: FormData }) {
       <div
         className="absolute inset-0 rounded-3xl transition-all duration-700"
         style={{
-          background: selectedRole
-            ? `radial-gradient(ellipse at center, ${selectedRole.color}08 0%, transparent 70%)`
+          background: selectedService
+            ? `radial-gradient(ellipse at center, ${selectedService.color}08 0%, transparent 70%)`
             : 'radial-gradient(ellipse at center, rgba(124,58,237,0.03) 0%, transparent 70%)',
         }}
       />
@@ -102,7 +103,7 @@ function TeamVisualization({ step, form }: { step: number; form: FormData }) {
           </motion.div>
         )}
 
-        {/* Step 3: THE KEY MOMENT — desk visualization */}
+        {/* Step 3: Service type visualization */}
         {step === 3 && (
           <motion.div
             key="step3-vis"
@@ -111,79 +112,49 @@ function TeamVisualization({ step, form }: { step: number; form: FormData }) {
             exit={{ opacity: 0 }}
             className="w-full"
           >
-            {!selectedRole ? (
+            {!selectedService ? (
               <div className="text-center">
                 <div className="flex justify-center gap-6 mb-6">
-                  {[0, 1, 2].map((i) => (
-                    <div key={i} className="w-16 h-16 rounded-xl border-2 border-dashed border-white/10 flex items-center justify-center">
-                      <span className="text-white/10 text-2xl">?</span>
+                  {serviceOptions.map((s) => (
+                    <div key={s.id} className="w-16 h-16 rounded-xl border-2 border-dashed border-white/10 flex items-center justify-center">
+                      <span className="text-white/10 text-2xl">{s.emoji}</span>
                     </div>
                   ))}
                 </div>
-                <p className="text-dim text-sm">Choose your AI Employee tier</p>
+                <p className="text-dim text-sm">Select your service type</p>
               </div>
             ) : (
               <div className="text-center">
-                {/* Desks */}
-                <div className="flex justify-center gap-4 mb-6">
-                  {Array.from({ length: deskCount }).map((_, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 20, scale: 0.8 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      transition={{ delay: i * 0.15, ease: [0.34, 1.56, 0.64, 1] }}
-                      className="w-20 h-20 rounded-xl flex items-center justify-center text-3xl border"
-                      style={{
-                        background: `${selectedRole.color}10`,
-                        borderColor: `${selectedRole.color}30`,
-                        boxShadow: `0 0 30px ${selectedRole.color}12`,
-                      }}
-                    >
-                      {i === 0 ? (selectedRole.id === 'operator' ? '🎧' : selectedRole.id === 'manager' ? '📊' : '👔') : '💻'}
-                    </motion.div>
-                  ))}
-                </div>
-
-                {/* Employee name */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ ease: [0.34, 1.56, 0.64, 1] }}
+                  className="w-24 h-24 rounded-2xl flex items-center justify-center text-5xl mx-auto mb-4 border"
+                  style={{
+                    background: `${selectedService.color}10`,
+                    borderColor: `${selectedService.color}30`,
+                    boxShadow: `0 0 30px ${selectedService.color}12`,
+                  }}
+                >
+                  {selectedService.emoji}
+                </motion.div>
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
+                  transition={{ delay: 0.2 }}
                 >
-                  <div className="text-white font-extrabold text-lg">{selectedRole.name}</div>
-                  <div className="font-mono text-sm mt-1" style={{ color: selectedRole.color }}>
-                    ${selectedRole.price}/mo
+                  <div className="text-white font-extrabold text-lg">{selectedService.label}</div>
+                  <div className="font-mono text-xs mt-1" style={{ color: selectedService.color }}>
+                    We&apos;ll find the perfect fit for your business
                   </div>
                 </motion.div>
-
-                {/* Capabilities */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.5 }}
-                  className="flex flex-wrap justify-center gap-2 mt-4"
-                >
-                  {selectedRole.capabilities.map((cap, i) => (
-                    <motion.div
-                      key={cap}
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.6 + i * 0.08, ease: [0.34, 1.56, 0.64, 1] }}
-                      className="text-[9px] px-2 py-1 rounded-full border"
-                      style={{ color: selectedRole.color, borderColor: `${selectedRole.color}25`, background: `${selectedRole.color}06` }}
-                    >
-                      {cap}
-                    </motion.div>
-                  ))}
-                </motion.div>
-                <p className="text-dim text-xs mt-3">{selectedRole.capabilities.length} capabilities included</p>
               </div>
             )}
           </motion.div>
         )}
 
         {/* Step 4: Speech bubble */}
-        {step === 4 && selectedRole && (
+        {step === 4 && (
           <motion.div
             key="step4-vis"
             initial={{ opacity: 0, scale: 0.8 }}
@@ -194,11 +165,11 @@ function TeamVisualization({ step, form }: { step: number; form: FormData }) {
             <div
               className="w-20 h-20 rounded-xl flex items-center justify-center text-4xl mx-auto mb-4 border"
               style={{
-                background: `${selectedRole.color}10`,
-                borderColor: `${selectedRole.color}30`,
+                background: selectedService ? `${selectedService.color}10` : 'rgba(124,58,237,0.06)',
+                borderColor: selectedService ? `${selectedService.color}30` : 'rgba(124,58,237,0.2)',
               }}
             >
-              {selectedRole.id === 'operator' ? '🎧' : selectedRole.id === 'manager' ? '📊' : '👔'}
+              {selectedService?.emoji || '🤖'}
             </div>
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -206,7 +177,7 @@ function TeamVisualization({ step, form }: { step: number; form: FormData }) {
               transition={{ delay: 0.3 }}
               className="bg-bg-card border border-border rounded-2xl rounded-tl-sm px-5 py-3 inline-block mb-3"
             >
-              <p className="text-white text-sm">Your AI team is ready! 🚀</p>
+              <p className="text-white text-sm">Almost there! 🚀</p>
             </motion.div>
             <p className="text-dim text-xs">Just a few more details...</p>
           </motion.div>
@@ -222,9 +193,9 @@ function TeamVisualization({ step, form }: { step: number; form: FormData }) {
             className="text-center"
           >
             {/* Celebration effect */}
-            {tierRoles.map((role, i) => (
+            {serviceOptions.map((svc, i) => (
               <motion.div
-                key={role.id}
+                key={svc.id}
                 initial={{ opacity: 0, y: 30, scale: 0.7 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ delay: i * 0.2, ease: [0.34, 1.56, 0.64, 1] }}
@@ -233,12 +204,12 @@ function TeamVisualization({ step, form }: { step: number; form: FormData }) {
                 <div
                   className="w-16 h-16 rounded-xl flex items-center justify-center text-2xl border animate-pulse"
                   style={{
-                    background: `${role.color}15`,
-                    borderColor: `${role.color}30`,
-                    boxShadow: `0 0 40px ${role.color}20`,
+                    background: `${svc.color}15`,
+                    borderColor: `${svc.color}30`,
+                    boxShadow: `0 0 40px ${svc.color}20`,
                   }}
                 >
-                  {role.id === 'operator' ? '🎧' : role.id === 'manager' ? '📊' : '👔'}
+                  {svc.emoji}
                 </div>
               </motion.div>
             ))}
@@ -261,9 +232,9 @@ function TeamVisualization({ step, form }: { step: number; form: FormData }) {
 /* LIVE PREVIEW CARD: updates in real-time                             */
 /* ------------------------------------------------------------------ */
 function LivePreviewCard({ form }: { form: FormData }) {
-  const selectedRole = tierRoles.find((r) => r.id === form.employeeTier);
+  const selectedService = serviceOptions.find((s) => s.id === form.serviceType);
 
-  if (!selectedRole) return null;
+  if (!selectedService) return null;
 
   return (
     <motion.div
@@ -271,27 +242,19 @@ function LivePreviewCard({ form }: { form: FormData }) {
       animate={{ opacity: 1, height: 'auto' }}
       className="bg-bg-card border border-border rounded-xl p-4 mt-4 overflow-hidden"
     >
-      <div className="text-[10px] font-mono uppercase tracking-wider text-dim mb-3">YOUR PLAN SUMMARY</div>
-      <div className="flex items-center gap-3 mb-3">
+      <div className="text-[10px] font-mono uppercase tracking-wider text-dim mb-3">YOUR REQUEST</div>
+      <div className="flex items-center gap-3">
         <div
           className="w-8 h-8 rounded-lg flex items-center justify-center text-sm"
-          style={{ background: `${selectedRole.color}15` }}
+          style={{ background: `${selectedService.color}15` }}
         >
-          {selectedRole.id === 'operator' ? '🎧' : selectedRole.id === 'manager' ? '📊' : '👔'}
+          {selectedService.emoji}
         </div>
         <div>
-          <div className="text-white text-sm font-bold">{selectedRole.name}</div>
-          <div className="text-xs font-mono" style={{ color: selectedRole.color }}>${selectedRole.price}/mo</div>
+          <div className="text-white text-sm font-bold">{selectedService.label}</div>
+          <div className="text-dim text-[10px]">We&apos;ll reach out within 24 hours</div>
         </div>
       </div>
-      <div className="flex flex-wrap gap-1.5 mb-2">
-        {selectedRole.capabilities.map((cap) => (
-          <span key={cap} className="text-[9px] px-2 py-0.5 rounded-full border" style={{ color: selectedRole.color, borderColor: `${selectedRole.color}30` }}>
-            {cap}
-          </span>
-        ))}
-      </div>
-      <div className="text-dim text-[10px]">{selectedRole.capabilities.length} capabilities • 24/7 • 48hr setup</div>
     </motion.div>
   );
 }
@@ -308,7 +271,7 @@ export default function ContactPage() {
     company: '',
     industry: '',
     size: '',
-    employeeTier: '',
+    serviceType: '',
     message: '',
   });
 
@@ -320,7 +283,7 @@ export default function ContactPage() {
     switch (step) {
       case 1: return form.name.trim() && form.email.trim();
       case 2: return form.company.trim();
-      case 3: return form.employeeTier;
+      case 3: return form.serviceType;
       case 4: return true;
       default: return true;
     }
@@ -524,79 +487,55 @@ export default function ContactPage() {
                   className="space-y-6"
                 >
                   <div>
-                    <h2 className="text-xl font-extrabold text-white mb-1">Choose your AI Employee</h2>
-                    <p className="text-dim text-sm">Each tier includes all agents from the tier below.</p>
+                    <h2 className="text-xl font-extrabold text-white mb-1">What are you looking for?</h2>
+                    <p className="text-dim text-sm">Select the service that best fits your needs.</p>
                   </div>
                   <div className="space-y-3">
-                    {tierRoles.map((role) => {
-                      const isSelected = form.employeeTier === role.id;
+                    {[
+                      { id: 'ai-employee', emoji: '🤖', label: 'AI Employee', desc: 'A full-time digital worker that handles communication, books appointments, follows up leads, and grows your business 24/7.' },
+                      { id: 'ai-agent', emoji: '⚡', label: 'AI Agent', desc: 'A standalone intelligent agent for a specific task — WhatsApp bot, receptionist, lead capture, or content creation.' },
+                      { id: 'web-design', emoji: '🎨', label: 'Web Design', desc: 'Custom website design, e-commerce store, or smart website with AI chat — built to convert.' },
+                    ].map((service) => {
+                      const isSelected = form.serviceType === service.id;
                       return (
                         <button
-                          key={role.id}
-                          onClick={() => updateField('employeeTier', role.id)}
+                          key={service.id}
+                          onClick={() => updateField('serviceType', service.id)}
                           className={`w-full text-left p-5 rounded-2xl border transition-all duration-300 ${
-                            isSelected ? 'shadow-lg' : 'hover:border-white/15'
+                            isSelected ? 'shadow-lg border-accent/40 bg-accent/[0.04]' : 'border-border hover:border-white/15'
                           }`}
                           style={{
-                            background: isSelected ? `${role.color}08` : undefined,
-                            borderColor: isSelected ? `${role.color}40` : 'rgba(255,255,255,0.05)',
-                            boxShadow: isSelected ? `0 0 40px ${role.color}10` : undefined,
+                            boxShadow: isSelected ? '0 0 40px rgba(124,58,237,0.1)' : undefined,
                           }}
                         >
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center gap-3">
-                              <div className="text-2xl">
-                                {role.id === 'operator' ? '🎧' : role.id === 'manager' ? '📊' : '👔'}
-                              </div>
-                              <div>
-                                <div className="text-white font-extrabold">{role.name}</div>
-                                <div className="text-dim text-xs">{role.label}</div>
-                              </div>
-                            </div>
-                            <div className="text-right">
-                              <div className="font-mono font-bold" style={{ color: role.color }}>
-                                ${role.price}/mo
-                              </div>
-                            </div>
+                          <div className="flex items-center gap-3 mb-2">
+                            <div className="text-2xl">{service.emoji}</div>
+                            <div className="text-white font-extrabold">{service.label}</div>
                           </div>
-                          <p className="text-dim text-xs mb-3">{role.shortDesc}</p>
-                          <div className="flex flex-wrap gap-1.5">
-                            {role.capabilities.map((cap) => (
-                              <span
-                                key={cap}
-                                className="text-[9px] px-2 py-0.5 rounded-full border"
-                                style={{ color: role.color, borderColor: `${role.color}25`, background: `${role.color}06` }}
-                              >
-                                {cap}
-                              </span>
-                            ))}
-                          </div>
+                          <p className="text-dim text-xs leading-relaxed">{service.desc}</p>
                           {/* Selection indicator */}
                           <div className="mt-3 flex items-center gap-2">
                             <div
                               className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all ${
-                                isSelected ? '' : 'border-white/15'
+                                isSelected ? 'border-accent' : 'border-white/15'
                               }`}
-                              style={isSelected ? { borderColor: role.color } : undefined}
                             >
                               {isSelected && (
                                 <motion.div
                                   initial={{ scale: 0 }}
                                   animate={{ scale: 1 }}
-                                  className="w-2 h-2 rounded-full"
-                                  style={{ background: role.color }}
+                                  className="w-2 h-2 rounded-full bg-accent"
                                 />
                               )}
                             </div>
-                            <span className="text-[10px]" style={{ color: isSelected ? role.color : 'rgba(255,255,255,0.3)' }}>
-                              {isSelected ? 'Selected' : `Select ${role.name}`}
+                            <span className="text-[10px]" style={{ color: isSelected ? '#7C3AED' : 'rgba(255,255,255,0.3)' }}>
+                              {isSelected ? 'Selected' : `Select ${service.label}`}
                             </span>
                           </div>
                         </button>
                       );
                     })}
                   </div>
-                  <LivePreviewCard form={form} />
                 </motion.div>
               )}
 
@@ -646,9 +585,9 @@ export default function ContactPage() {
                     <div className="text-[10px] font-mono uppercase tracking-wider text-dim mb-2">SUMMARY</div>
                     <div className="text-white text-sm mb-1"><strong>Name:</strong> {form.name}</div>
                     <div className="text-white text-sm mb-1"><strong>Company:</strong> {form.company}</div>
-                    {form.employeeTier && (
+                    {form.serviceType && (
                       <div className="text-white text-sm">
-                        <strong>Plan:</strong> {tierRoles.find((r) => r.id === form.employeeTier)?.name}
+                        <strong>Service:</strong> {serviceOptions.find((s) => s.id === form.serviceType)?.label}
                       </div>
                     )}
                   </div>

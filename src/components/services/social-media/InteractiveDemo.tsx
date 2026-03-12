@@ -376,7 +376,7 @@ Return ONLY the JSON array. No markdown, no explanation, no code fences.`;
               className="w-2 h-2 rounded-full"
               style={{ background: ACCENT }}
             />
-            Powered by Pruve AI &mdash; Generated with Claude
+            Powered by Pruve AI
           </motion.div>
         )}
       </motion.div>

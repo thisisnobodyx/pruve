@@ -20,31 +20,31 @@ interface CaseStudy {
 const stats: Stat[] = [
   { target: 10, suffix: '+', label: 'Years' },
   { target: 200, suffix: '+', label: 'Clients' },
-  { target: 8, suffix: '', label: 'AI Services' },
+  { target: 40, suffix: '+', label: 'Industries' },
   { target: 5, suffix: '', label: 'Countries' },
 ];
 
 const caseStudies: CaseStudy[] = [
   {
     industry: 'Local Restaurant',
-    title: 'WhatsApp AI Agent',
-    result: '40% faster response',
+    title: 'AI Employee — The Operator',
+    result: '200+ messages/day handled',
     description:
-      'Automated order confirmations and reservations via WhatsApp, handling 200+ messages daily.',
+      'Handles every WhatsApp booking, confirms orders, follows up with customers, and sends a morning briefing — all automatically.',
   },
   {
     industry: 'Real Estate Agency',
-    title: 'Lead Capture System',
+    title: 'AI Employee — The Manager',
     result: '3x more conversions',
     description:
-      'Automated lead qualification and follow-up across email, WhatsApp, and SMS.',
+      'Qualifies leads across every channel, follows up on day 1, 3, and 7, and sends weekly performance reports to the team.',
   },
   {
     industry: 'Fitness Studio',
-    title: 'Full Automation Suite',
+    title: 'AI Employee — The Executive',
     result: '$4,200/mo saved',
     description:
-      'AI receptionist, class booking automation, and social media content engine.',
+      'Runs the entire operation — books classes, creates social content, chases invoices, and monitors competitor pricing.',
   },
 ];
 

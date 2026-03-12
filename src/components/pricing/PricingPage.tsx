@@ -254,7 +254,6 @@ interface ProjectRow {
 }
 
 const projects: ProjectRow[] = [
-  { name: 'Smart Website + AI Chat', price: 'from $2,500' },
   { name: 'AI Business Audit', price: '$497 (credited to setup fee)' },
   { name: 'Custom Website Design', price: 'Request Quote' },
   { name: 'E-commerce Store', price: 'Request Quote' },
@@ -804,9 +803,18 @@ function OneTimeProjectsSection() {
               <span className="text-white text-sm font-medium">
                 {project.name}
               </span>
-              <span className="text-accent font-mono text-sm font-bold shrink-0 ml-4">
-                {project.price}
-              </span>
+              {project.price === 'Request Quote' ? (
+                <Link
+                  href="/contact"
+                  className="text-accent font-mono text-sm font-bold shrink-0 ml-4 hover:text-accent/80 transition-colors"
+                >
+                  Request Quote &rarr;
+                </Link>
+              ) : (
+                <span className="text-accent font-mono text-sm font-bold shrink-0 ml-4">
+                  {project.price}
+                </span>
+              )}
             </motion.div>
           ))}
         </div>

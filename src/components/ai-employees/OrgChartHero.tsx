@@ -77,11 +77,8 @@ export default function OrgChartHero() {
               <div className="font-display text-white font-extrabold text-lg mb-1">
                 {role.name}
               </div>
-              <div className="font-body text-dim text-xs leading-relaxed mb-3">
+              <div className="font-body text-dim text-xs leading-relaxed">
                 {role.shortDesc}
-              </div>
-              <div className="font-mono text-sm font-bold" style={{ color: role.color }}>
-                ${role.price}/mo
               </div>
             </motion.div>
           ))}

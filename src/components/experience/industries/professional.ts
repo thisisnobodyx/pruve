@@ -935,8 +935,8 @@ export const professionalIndustries: Industry[] = [
      ================================================================ */
   {
     id: 'recruitment',
-    label: 'Recruitment / Staffing Agency',
-    emoji: '👥',
+    label: 'Recruitment Agency',
+    emoji: '🎯',
     category: 'Professional Services',
     tagline: 'Fill roles faster while your AI sources candidates, schedules interviews, and nurtures talent pipelines 24/7',
     dayEvents: [
