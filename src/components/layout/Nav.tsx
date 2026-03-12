@@ -23,7 +23,8 @@ const services = [
 ];
 
 const navLinks = [
-  { label: 'Agents', href: '/services', hasDropdown: true },
+  { label: 'Agents', href: '/services', hasDropdown: 'agents' as const },
+  { label: 'Services', href: '/services', hasDropdown: 'services' as const },
   { label: 'AI Employees', href: '/ai-employees' },
   { label: 'Experience', href: '/experience' },
   { label: 'Pricing', href: '/pricing' },
@@ -34,7 +35,7 @@ export default function Nav() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [megaOpen, setMegaOpen] = useState(false);
+  const [megaOpen, setMegaOpen] = useState<'agents' | 'services' | false>(false);
   const megaTimeout = useRef<NodeJS.Timeout | null>(null);
   const megaRef = useRef<HTMLDivElement>(null);
 
@@ -56,9 +57,9 @@ export default function Nav() {
 
   const closeMobile = useCallback(() => setMobileOpen(false), []);
 
-  const handleMegaEnter = () => {
+  const handleMegaEnter = (dropdown: 'agents' | 'services') => {
     if (megaTimeout.current) clearTimeout(megaTimeout.current);
-    setMegaOpen(true);
+    setMegaOpen(dropdown);
   };
 
   const handleMegaLeave = () => {
@@ -93,13 +94,15 @@ export default function Nav() {
           {/* Desktop Navigation */}
           <ul className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => {
-              const isActive = pathname === link.href || (link.hasDropdown && pathname.startsWith('/services'));
+              const isAgentsActive = link.hasDropdown === 'agents' && pathname.startsWith('/services') && !pathname.startsWith('/services/web-design') && !pathname.startsWith('/services/seo');
+              const isServicesActive = link.hasDropdown === 'services' && (pathname.startsWith('/services/web-design') || pathname.startsWith('/services/seo'));
+              const isActive = isAgentsActive || isServicesActive || (!link.hasDropdown && pathname === link.href);
               if (link.hasDropdown) {
                 return (
                   <li
-                    key={link.href}
+                    key={link.label}
                     className="relative"
-                    onMouseEnter={handleMegaEnter}
+                    onMouseEnter={() => handleMegaEnter(link.hasDropdown)}
                     onMouseLeave={handleMegaLeave}
                   >
                     <button
@@ -108,7 +111,7 @@ export default function Nav() {
                       }`}
                     >
                       {link.label}
-                      <svg className={`w-3.5 h-3.5 transition-transform duration-300 ${megaOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <svg className={`w-3.5 h-3.5 transition-transform duration-300 ${megaOpen === link.hasDropdown ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                       </svg>
                       {isActive && (
@@ -177,23 +180,21 @@ export default function Nav() {
         </nav>
       </header>
 
-      {/* Mega Dropdown */}
+      {/* Agents Dropdown */}
       <AnimatePresence>
-        {megaOpen && (
+        {megaOpen === 'agents' && (
           <motion.div
             ref={megaRef}
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            onMouseEnter={handleMegaEnter}
+            onMouseEnter={() => handleMegaEnter('agents')}
             onMouseLeave={handleMegaLeave}
             className="fixed top-20 left-0 right-0 z-40"
           >
             <div className="max-w-[1400px] mx-auto px-6">
               <div className="bg-bg-2/95 backdrop-blur-2xl border border-border rounded-2xl p-8 shadow-2xl shadow-black/40">
-                {/* AI Agents */}
-                <h5 className="font-display font-extrabold text-xs uppercase tracking-[0.2em] text-dim mb-4">AI Agents</h5>
                 <div className="grid grid-cols-4 gap-3">
                   {agents.map((agent) => (
                     <Link
@@ -217,35 +218,6 @@ export default function Nav() {
                     </Link>
                   ))}
                 </div>
-
-                {/* Services */}
-                <div className="mt-5 pt-5 border-t border-border">
-                  <h5 className="font-display font-extrabold text-xs uppercase tracking-[0.2em] text-dim mb-4">Services</h5>
-                  <div className="grid grid-cols-4 gap-3">
-                    {services.map((service) => (
-                      <Link
-                        key={service.href}
-                        href={service.href}
-                        onClick={() => setMegaOpen(false)}
-                        className="group flex items-start gap-3 p-3 rounded-xl transition-all duration-200 hover:bg-white/[0.04]"
-                      >
-                        <div
-                          className="w-10 h-10 rounded-lg flex items-center justify-center text-lg shrink-0"
-                          style={{ background: `${service.color}15` }}
-                        >
-                          {service.icon}
-                        </div>
-                        <div>
-                          <div className="text-sm font-medium text-white group-hover:text-accent transition-colors">
-                            {service.label}
-                          </div>
-                          <div className="text-xs text-dim mt-0.5">{service.desc}</div>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-
                 <div className="mt-5 pt-4 border-t border-border flex items-center justify-between">
                   <p className="text-dim text-xs">Not sure which agent you need?</p>
                   <Link
@@ -255,6 +227,49 @@ export default function Nav() {
                   >
                     See all AI Employees &rarr;
                   </Link>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Services Dropdown */}
+      <AnimatePresence>
+        {megaOpen === 'services' && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            onMouseEnter={() => handleMegaEnter('services')}
+            onMouseLeave={handleMegaLeave}
+            className="fixed top-20 left-0 right-0 z-40"
+          >
+            <div className="max-w-[1400px] mx-auto px-6">
+              <div className="bg-bg-2/95 backdrop-blur-2xl border border-border rounded-2xl p-6 shadow-2xl shadow-black/40 inline-block">
+                <div className="flex gap-3">
+                  {services.map((service) => (
+                    <Link
+                      key={service.href}
+                      href={service.href}
+                      onClick={() => setMegaOpen(false)}
+                      className="group flex items-start gap-3 p-3 rounded-xl transition-all duration-200 hover:bg-white/[0.04] min-w-[200px]"
+                    >
+                      <div
+                        className="w-10 h-10 rounded-lg flex items-center justify-center text-lg shrink-0"
+                        style={{ background: `${service.color}15` }}
+                      >
+                        {service.icon}
+                      </div>
+                      <div>
+                        <div className="text-sm font-medium text-white group-hover:text-accent transition-colors">
+                          {service.label}
+                        </div>
+                        <div className="text-xs text-dim mt-0.5">{service.desc}</div>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
               </div>
             </div>
