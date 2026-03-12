@@ -8,6 +8,8 @@ interface ScrollPinSectionProps {
   className?: string;
 }
 
+const NAV_HEIGHT = 80; // matches Nav h-20 = 80px
+
 export default function ScrollPinSection({
   children,
   pinDuration = 500,
@@ -22,20 +24,19 @@ export default function ScrollPinSection({
     const pin = pinRef.current;
     if (!container || !pin) return;
 
-    // Delay GSAP init to prevent scroll position interference on page load
-    const timer = setTimeout(async () => {
+    let trigger: any = null;
+
+    const initGSAP = async () => {
       const gsapModule = await import('gsap');
       const stModule = await import('gsap/ScrollTrigger');
 
       gsapModule.default.registerPlugin(stModule.ScrollTrigger);
 
-      // GSAP ScrollTrigger doesn't parse 'vh' units in end strings —
-      // convert vh to pixels manually
       const pinDistancePx = (pinDuration / 100) * window.innerHeight;
 
-      const trigger = stModule.ScrollTrigger.create({
+      trigger = stModule.ScrollTrigger.create({
         trigger: container,
-        start: 'top top',
+        start: `top ${NAV_HEIGHT}px`,
         end: `+=${pinDistancePx}`,
         pin: pin,
         scrub: 1,
@@ -43,17 +44,17 @@ export default function ScrollPinSection({
           setProgress(self.progress);
         },
       });
+    };
 
-      // Store for cleanup
-      (container as any).__gsapTrigger = trigger;
-    }, 500);
+    // Use requestAnimationFrame to ensure DOM is ready without a long delay
+    const raf = requestAnimationFrame(() => {
+      initGSAP();
+    });
 
     return () => {
-      clearTimeout(timer);
-      const trigger = (container as any).__gsapTrigger;
+      cancelAnimationFrame(raf);
       if (trigger) {
         trigger.kill();
-        delete (container as any).__gsapTrigger;
       }
     };
   }, [pinDuration]);

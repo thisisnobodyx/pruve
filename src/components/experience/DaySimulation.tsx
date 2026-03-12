@@ -1,111 +1,11 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence, useSpring, useMotionValue } from 'framer-motion';
+import { useState, useEffect, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import PhoneMockup from '@/components/shared/PhoneMockup';
 import { channels, tierColors, tierLabels, capabilities } from './experience-data';
 import type { DayEvent, TierId } from './experience-data';
 import { getIndustry } from './industries';
-
-/* ------------------------------------------------------------------ */
-/* TYPES                                                                */
-/* ------------------------------------------------------------------ */
-type SimState = 'idle' | 'playing' | 'paused' | 'complete';
-
-/* ------------------------------------------------------------------ */
-/* SIMULATION EVENT CARD                                                */
-/* ------------------------------------------------------------------ */
-function EventCard({ event, isActive }: { event: DayEvent; isActive: boolean }) {
-  const ch = channels[event.channel];
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: -20, height: 0 }}
-      animate={{ opacity: 1, x: 0, height: 'auto' }}
-      className={`border rounded-xl p-3 transition-all duration-300 ${
-        isActive
-          ? 'bg-bg-card shadow-lg'
-          : 'bg-bg-card/50'
-      }`}
-      style={{
-        borderTopColor: isActive ? `${tierColors[event.tier]}30` : 'rgba(255,255,255,0.05)',
-        borderRightColor: isActive ? `${tierColors[event.tier]}30` : 'rgba(255,255,255,0.05)',
-        borderBottomColor: isActive ? `${tierColors[event.tier]}30` : 'rgba(255,255,255,0.05)',
-        borderLeftWidth: 3,
-        borderLeftColor: tierColors[event.tier],
-      }}
-    >
-      <div className="flex items-center gap-2 mb-1">
-        <span className="text-[10px] font-mono text-dim">{event.time}</span>
-        <span className="text-xs" title={ch.label}>{ch.icon}</span>
-        <span
-          className="text-[9px] px-1.5 py-0.5 rounded-full font-mono"
-          style={{
-            color: tierColors[event.tier],
-            background: `${tierColors[event.tier]}10`,
-            border: `1px solid ${tierColors[event.tier]}20`,
-          }}
-        >
-          {tierLabels[event.tier].replace('The ', '')}
-        </span>
-      </div>
-      <div className="text-white text-xs font-bold mb-0.5">{event.title}</div>
-      {isActive && (
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-dim text-[11px] leading-relaxed"
-        >
-          {event.description}
-        </motion.p>
-      )}
-    </motion.div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* CAPABILITY INDICATOR                                                 */
-/* ------------------------------------------------------------------ */
-function CapabilityPill({
-  capId,
-  activated,
-  justActivated,
-}: {
-  capId: string;
-  activated: boolean;
-  justActivated: boolean;
-}) {
-  const cap = capabilities.find((c) => c.id === capId);
-  if (!cap) return null;
-
-  return (
-    <motion.div
-      animate={
-        justActivated
-          ? { scale: [1, 1.15, 1], transition: { duration: 0.4 } }
-          : {}
-      }
-      className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-[11px] transition-all duration-500 ${
-        activated
-          ? 'border-opacity-30 bg-opacity-10'
-          : 'border-white/5 bg-transparent text-white/20'
-      }`}
-      style={
-        activated
-          ? {
-              color: tierColors[cap.tier],
-              borderColor: `${tierColors[cap.tier]}30`,
-              background: `${tierColors[cap.tier]}08`,
-              boxShadow: justActivated ? `0 0 20px ${tierColors[cap.tier]}15` : undefined,
-            }
-          : undefined
-      }
-    >
-      <span className="text-sm">{cap.icon}</span>
-      <span className="font-medium truncate">{cap.name.replace(/ & .*/, '')}</span>
-      {activated && <span className="ml-auto text-[9px]">✓</span>}
-    </motion.div>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 /* PHONE CONVERSATION VIEW                                              */
@@ -127,7 +27,7 @@ function PhoneConversation({ event }: { event: DayEvent }) {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.25 }}
         >
           {event.channel === 'system' ? (
             <div className="bg-accent/10 border border-accent/20 rounded-xl p-3 text-center">
@@ -150,7 +50,7 @@ function PhoneConversation({ event }: { event: DayEvent }) {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.8 }}
+          transition={{ duration: 0.25, delay: 0.3 }}
           className="flex gap-2 justify-end"
         >
           <div
@@ -191,109 +91,39 @@ export default function DaySimulation({ industryId }: { industryId: string }) {
   const industry = getIndustry(industryId);
   const events = industry?.dayEvents ?? [];
 
-  const [state, setState] = useState<SimState>('idle');
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [activatedCaps, setActivatedCaps] = useState<Set<string>>(new Set());
-  const [lastActivatedCap, setLastActivatedCap] = useState<string | null>(null);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const feedRef = useRef<HTMLDivElement>(null);
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  // Spring-animated stats
-  const messagesVal = useMotionValue(0);
-  const bookingsVal = useMotionValue(0);
-  const savingsVal = useMotionValue(0);
-  const messagesSpring = useSpring(messagesVal, { damping: 30, stiffness: 80 });
-  const bookingsSpring = useSpring(bookingsVal, { damping: 30, stiffness: 80 });
-  const savingsSpring = useSpring(savingsVal, { damping: 30, stiffness: 80 });
+  const [activeIndex, setActiveIndex] = useState(0);
 
   // Reset when industry changes
   useEffect(() => {
-    setState('idle');
-    setCurrentIndex(0);
-    setActivatedCaps(new Set());
-    setLastActivatedCap(null);
-    messagesVal.set(0);
-    bookingsVal.set(0);
-    savingsVal.set(0);
-    // Auto-start after a brief delay
-    const t = setTimeout(() => setState('playing'), 800);
-    return () => clearTimeout(t);
-  }, [industryId, messagesVal, bookingsVal, savingsVal]);
+    setActiveIndex(0);
+  }, [industryId]);
 
-  // Auto-play timer
-  const advance = useCallback(() => {
-    setCurrentIndex((prev) => {
-      const next = prev + 1;
-      if (next >= events.length) {
-        setState('complete');
-        return prev;
+  // Collect unique activated caps up to current event
+  const activatedCaps = useMemo(() => {
+    const caps = new Set<string>();
+    for (let i = 0; i <= activeIndex; i++) {
+      if (events[i]) caps.add(events[i].capability);
+    }
+    return caps;
+  }, [activeIndex, events]);
+
+  // Stats up to current event
+  const stats = useMemo(() => {
+    let messages = 0;
+    let bookings = 0;
+    let savings = 0;
+    for (let i = 0; i <= activeIndex; i++) {
+      const e = events[i];
+      if (e?.stat) {
+        if (e.stat.key === 'messages') messages += e.stat.increment;
+        if (e.stat.key === 'bookings') bookings += e.stat.increment;
+        if (e.stat.key === 'savings') savings += e.stat.increment;
       }
-      return next;
-    });
-  }, [events.length]);
-
-  useEffect(() => {
-    if (state === 'playing' && events.length > 0) {
-      intervalRef.current = setInterval(advance, 4500);
-      return () => {
-        if (intervalRef.current) clearInterval(intervalRef.current);
-      };
     }
-    if (state !== 'playing' && intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-  }, [state, advance, events.length]);
+    return { messages, bookings, savings };
+  }, [activeIndex, events]);
 
-  // Process current event — activate capability + update stats
-  useEffect(() => {
-    if (events.length === 0 || currentIndex >= events.length) return;
-    const event = events[currentIndex];
-
-    // Activate capability
-    setActivatedCaps((prev) => new Set(prev).add(event.capability));
-    setLastActivatedCap(event.capability);
-    const t = setTimeout(() => setLastActivatedCap(null), 600);
-
-    // Increment stats
-    if (event.stat) {
-      if (event.stat.key === 'messages') messagesVal.set(messagesVal.get() + event.stat.increment);
-      if (event.stat.key === 'bookings') bookingsVal.set(bookingsVal.get() + event.stat.increment);
-      if (event.stat.key === 'savings') savingsVal.set(savingsVal.get() + event.stat.increment);
-    }
-
-    // Auto-scroll feed
-    if (feedRef.current) {
-      feedRef.current.scrollTop = feedRef.current.scrollHeight;
-    }
-
-    return () => clearTimeout(t);
-  }, [currentIndex, events, messagesVal, bookingsVal, savingsVal]);
-
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === ' ') {
-        e.preventDefault();
-        setState((s) => (s === 'playing' ? 'paused' : s === 'paused' ? 'playing' : s));
-      }
-      if (e.key === 'ArrowRight' && state === 'playing') {
-        advance();
-      }
-    };
-    window.addEventListener('keydown', handleKey);
-    return () => window.removeEventListener('keydown', handleKey);
-  }, [state, advance]);
-
-  const currentEvent = events[currentIndex];
-  const progress = events.length > 0 ? ((currentIndex + 1) / events.length) * 100 : 0;
-
-  // Capability IDs for the panel
-  const allCapIds = useMemo(
-    () => capabilities.map((c) => c.id),
-    []
-  );
+  const currentEvent = events[activeIndex];
 
   if (!industry || events.length === 0) {
     return (
@@ -304,7 +134,7 @@ export default function DaySimulation({ industryId }: { industryId: string }) {
   }
 
   return (
-    <section ref={sectionRef} className="py-8 px-4 md:px-6 bg-bg-2">
+    <section className="py-8 px-4 md:px-6 bg-bg-2">
       <div className="max-w-7xl mx-auto">
         {/* Section header */}
         <motion.div
@@ -319,94 +149,105 @@ export default function DaySimulation({ industryId }: { industryId: string }) {
           <h2 className="text-2xl md:text-3xl font-extrabold text-white">
             A day in the life of your AI Employee
           </h2>
+          <p className="text-dim text-sm mt-2">Click any event to see how your AI handles it</p>
         </motion.div>
 
-        {/* Timeline bar */}
-        <div className="bg-bg-card border border-border rounded-xl p-3 mb-4">
-          <div className="flex items-center gap-3">
-            <span className="text-dim text-xs font-mono whitespace-nowrap">
-              {currentEvent?.time || '6:00 AM'}
-            </span>
-            <div className="flex-1 h-2 bg-bg rounded-full overflow-hidden">
-              <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-accent-2 via-accent to-accent-3"
-                animate={{ width: `${progress}%` }}
-                transition={{ type: 'spring', stiffness: 100, damping: 20 }}
-              />
-            </div>
-            <span className="text-dim text-xs font-mono whitespace-nowrap">10:00 PM</span>
-          </div>
-          <div className="flex items-center justify-between mt-2">
-            <span className="text-dim text-[11px]">
-              {state === 'complete'
-                ? `All ${events.length} events complete`
-                : `Event ${currentIndex + 1} of ${events.length}`}
-            </span>
-            <div className="flex items-center gap-2">
-              {state === 'complete' ? (
-                <button
-                  onClick={() => {
-                    setCurrentIndex(0);
-                    setActivatedCaps(new Set());
-                    setLastActivatedCap(null);
-                    messagesVal.set(0);
-                    bookingsVal.set(0);
-                    savingsVal.set(0);
-                    setState('playing');
+        {/* DESKTOP: 2-column layout — Timeline on left, Phone on right */}
+        <div className="hidden lg:grid grid-cols-[1fr_340px] gap-6 items-start">
+          {/* Left: Event Timeline */}
+          <div className="space-y-1.5">
+            {events.map((event, i) => {
+              const isActive = i === activeIndex;
+              const ch = channels[event.channel];
+              const cap = capabilities.find((c) => c.id === event.capability);
+
+              return (
+                <motion.button
+                  key={`${event.time}-${i}`}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: i * 0.04 }}
+                  onClick={() => setActiveIndex(i)}
+                  className={`w-full text-left px-4 py-3 rounded-xl border transition-all duration-200 group ${
+                    isActive
+                      ? 'bg-bg-card shadow-lg scale-[1.01]'
+                      : 'bg-bg-card/30 hover:bg-bg-card/60'
+                  }`}
+                  style={{
+                    borderColor: isActive ? `${tierColors[event.tier]}40` : 'transparent',
+                    borderLeftWidth: 3,
+                    borderLeftColor: isActive ? tierColors[event.tier] : `${tierColors[event.tier]}30`,
                   }}
-                  className="text-accent text-xs font-medium hover:underline"
                 >
-                  🔄 Replay
-                </button>
-              ) : (
-                <>
-                  <button
-                    onClick={() =>
-                      setState((s) => (s === 'playing' ? 'paused' : 'playing'))
-                    }
-                    className="text-dim hover:text-white text-xs transition-colors"
-                  >
-                    {state === 'playing' ? '⏸ Pause' : '▶ Play'}
-                  </button>
-                  <button
-                    onClick={advance}
-                    className="text-dim hover:text-white text-xs transition-colors"
-                  >
-                    ⏭ Skip
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
+                  <div className="flex items-center gap-3">
+                    {/* Time */}
+                    <span className="text-[11px] font-mono text-dim w-16 shrink-0">
+                      {event.time}
+                    </span>
 
-        {/* DESKTOP: 3-column mission control */}
-        <div className="hidden lg:grid grid-cols-[260px_1fr_220px] gap-4" style={{ height: '70vh' }}>
-          {/* Left: Activity Feed */}
-          <div className="flex flex-col">
-            <div className="text-[10px] font-mono uppercase tracking-widest text-dim mb-2 px-1">
-              Activity Feed
-            </div>
-            <div ref={feedRef} className="flex-1 overflow-y-auto space-y-2 pr-1 scrollbar-thin">
-              <AnimatePresence>
-                {events.slice(0, currentIndex + 1).map((event, i) => (
-                  <EventCard key={`${event.time}-${i}`} event={event} isActive={i === currentIndex} />
-                ))}
-              </AnimatePresence>
-            </div>
+                    {/* Channel icon */}
+                    <span className="text-sm" title={ch.label}>
+                      {ch.icon}
+                    </span>
+
+                    {/* Title + description */}
+                    <div className="flex-1 min-w-0">
+                      <div className="text-white text-sm font-semibold truncate">
+                        {event.title}
+                      </div>
+                      {isActive && (
+                        <motion.p
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          className="text-dim text-xs mt-1 line-clamp-2"
+                        >
+                          {event.description}
+                        </motion.p>
+                      )}
+                    </div>
+
+                    {/* Tier + Capability badges */}
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      {cap && (
+                        <span
+                          className="text-[9px] px-1.5 py-0.5 rounded-full font-mono hidden xl:inline-block"
+                          style={{
+                            color: tierColors[cap.tier],
+                            background: `${tierColors[cap.tier]}10`,
+                          }}
+                        >
+                          {cap.name.split(' ')[0]}
+                        </span>
+                      )}
+                      <span
+                        className="text-[9px] px-1.5 py-0.5 rounded-full font-mono"
+                        style={{
+                          color: tierColors[event.tier],
+                          background: `${tierColors[event.tier]}10`,
+                          border: `1px solid ${tierColors[event.tier]}20`,
+                        }}
+                      >
+                        {tierLabels[event.tier].replace('The ', '')}
+                      </span>
+                    </div>
+                  </div>
+                </motion.button>
+              );
+            })}
           </div>
 
-          {/* Center: Phone Mockup */}
-          <div className="flex items-center justify-center">
+          {/* Right: Phone + Stats (sticky) */}
+          <div className="sticky top-24 space-y-4">
+            {/* Phone */}
             <PhoneMockup accentColor={tierColors[currentEvent?.tier || 'operator']} size="md">
               <AnimatePresence mode="wait">
                 {currentEvent && (
                   <motion.div
-                    key={currentIndex}
+                    key={activeIndex}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.2 }}
                     className="h-full"
                   >
                     <PhoneConversation event={currentEvent} />
@@ -414,36 +255,68 @@ export default function DaySimulation({ industryId }: { industryId: string }) {
                 )}
               </AnimatePresence>
             </PhoneMockup>
-          </div>
 
-          {/* Right: Capabilities Panel */}
-          <div className="flex flex-col">
-            <div className="text-[10px] font-mono uppercase tracking-widest text-dim mb-2 px-1">
-              Capabilities Activated
+            {/* Activated capabilities */}
+            <div className="bg-bg-card/50 border border-border rounded-xl p-3">
+              <div className="text-[10px] font-mono uppercase tracking-widest text-dim mb-2">
+                Capabilities Used
+              </div>
+              <div className="flex flex-wrap gap-1">
+                {capabilities.map((cap) => {
+                  const isActivated = activatedCaps.has(cap.id);
+                  return (
+                    <span
+                      key={cap.id}
+                      className={`text-[10px] px-2 py-0.5 rounded-full transition-all duration-300 ${
+                        isActivated
+                          ? 'font-medium'
+                          : 'text-white/15'
+                      }`}
+                      style={
+                        isActivated
+                          ? {
+                              color: tierColors[cap.tier],
+                              background: `${tierColors[cap.tier]}10`,
+                              border: `1px solid ${tierColors[cap.tier]}20`,
+                            }
+                          : { border: '1px solid rgba(255,255,255,0.05)' }
+                      }
+                    >
+                      {cap.icon} {cap.name.replace(/ & .*/, '')}
+                    </span>
+                  );
+                })}
+              </div>
+              {/* Legend */}
+              <div className="flex items-center gap-3 mt-2 pt-2 border-t border-border">
+                {(['operator', 'manager', 'executive'] as TierId[]).map((tier) => (
+                  <div key={tier} className="flex items-center gap-1">
+                    <div className="w-1.5 h-1.5 rounded-full" style={{ background: tierColors[tier] }} />
+                    <span className="text-[9px] text-dim">{tierLabels[tier]}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="flex-1 overflow-y-auto space-y-1.5 pr-1">
-              {allCapIds.map((capId) => (
-                <CapabilityPill
-                  key={capId}
-                  capId={capId}
-                  activated={activatedCaps.has(capId)}
-                  justActivated={lastActivatedCap === capId}
-                />
-              ))}
-            </div>
-            {/* Legend */}
-            <div className="mt-3 pt-3 border-t border-border space-y-1">
-              {(['operator', 'manager', 'executive'] as TierId[]).map((tier) => (
-                <div key={tier} className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full" style={{ background: tierColors[tier] }} />
-                  <span className="text-[10px] text-dim">{tierLabels[tier]}</span>
-                </div>
-              ))}
+
+            {/* Quick stats */}
+            <div className="grid grid-cols-3 gap-2">
+              <div className="bg-bg-card/50 border border-border rounded-lg p-2 text-center">
+                <div className="text-accent-2 font-mono font-bold text-lg">{stats.messages}</div>
+                <div className="text-dim text-[9px]">Messages</div>
+              </div>
+              <div className="bg-bg-card/50 border border-border rounded-lg p-2 text-center">
+                <div className="text-accent font-mono font-bold text-lg">{stats.bookings}</div>
+                <div className="text-dim text-[9px]">Bookings</div>
+              </div>
+              <div className="bg-bg-card/50 border border-border rounded-lg p-2 text-center">
+                <div className="text-accent-3 font-mono font-bold text-lg">${stats.savings}</div>
+                <div className="text-dim text-[9px]">Revenue</div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* MOBILE: Stacked layout */}
+        {/* MOBILE: Stacked layout — Phone on top, scrollable event list below */}
         <div className="lg:hidden space-y-4">
           {/* Phone */}
           <div className="flex justify-center">
@@ -451,11 +324,11 @@ export default function DaySimulation({ industryId }: { industryId: string }) {
               <AnimatePresence mode="wait">
                 {currentEvent && (
                   <motion.div
-                    key={currentIndex}
+                    key={activeIndex}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.2 }}
                     className="h-full"
                   >
                     <PhoneConversation event={currentEvent} />
@@ -465,88 +338,85 @@ export default function DaySimulation({ industryId }: { industryId: string }) {
             </PhoneMockup>
           </div>
 
-          {/* Capabilities as horizontal pills */}
-          <div className="flex gap-1.5 overflow-x-auto pb-2 px-1 scrollbar-thin">
-            {allCapIds
-              .filter((id) => activatedCaps.has(id))
-              .map((capId) => {
-                const cap = capabilities.find((c) => c.id === capId);
-                return cap ? (
-                  <div
-                    key={capId}
-                    className="flex-shrink-0 flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-medium border"
-                    style={{
-                      color: tierColors[cap.tier],
-                      borderColor: `${tierColors[cap.tier]}25`,
-                      background: `${tierColors[cap.tier]}08`,
-                    }}
-                  >
-                    <span>{cap.icon}</span>
-                    {cap.name.replace(/ & .*/, '')}
-                  </div>
-                ) : null;
-              })}
+          {/* Stats bar */}
+          <div className="grid grid-cols-3 gap-2">
+            <div className="bg-bg-card/50 border border-border rounded-lg p-2 text-center">
+              <div className="text-accent-2 font-mono font-bold">{stats.messages}</div>
+              <div className="text-dim text-[9px]">Messages</div>
+            </div>
+            <div className="bg-bg-card/50 border border-border rounded-lg p-2 text-center">
+              <div className="text-accent font-mono font-bold">{stats.bookings}</div>
+              <div className="text-dim text-[9px]">Bookings</div>
+            </div>
+            <div className="bg-bg-card/50 border border-border rounded-lg p-2 text-center">
+              <div className="text-accent-3 font-mono font-bold">${stats.savings}</div>
+              <div className="text-dim text-[9px]">Revenue</div>
+            </div>
           </div>
 
-          {/* Activity feed — last 4 events */}
-          <div className="space-y-2">
+          {/* Activated caps */}
+          <div className="flex gap-1 overflow-x-auto pb-1 px-1 scrollbar-thin">
+            {capabilities
+              .filter((c) => activatedCaps.has(c.id))
+              .map((cap) => (
+                <span
+                  key={cap.id}
+                  className="flex-shrink-0 text-[10px] px-2 py-0.5 rounded-full font-medium"
+                  style={{
+                    color: tierColors[cap.tier],
+                    background: `${tierColors[cap.tier]}08`,
+                    border: `1px solid ${tierColors[cap.tier]}20`,
+                  }}
+                >
+                  {cap.icon} {cap.name.replace(/ & .*/, '')}
+                </span>
+              ))}
+          </div>
+
+          {/* Event list */}
+          <div className="space-y-1">
             <div className="text-[10px] font-mono uppercase tracking-widest text-dim px-1">
-              Recent Activity
+              Timeline — tap to preview
             </div>
-            <AnimatePresence>
-              {events
-                .slice(Math.max(0, currentIndex - 3), currentIndex + 1)
-                .map((event, i, arr) => (
-                  <EventCard
-                    key={`${event.time}-${i}`}
-                    event={event}
-                    isActive={i === arr.length - 1}
-                  />
-                ))}
-            </AnimatePresence>
-          </div>
-        </div>
+            {events.map((event, i) => {
+              const isActive = i === activeIndex;
+              const ch = channels[event.channel];
 
-        {/* Stats bar */}
-        <div className="mt-4 bg-bg-card border border-border rounded-xl p-4">
-          <div className="grid grid-cols-3 gap-4 text-center">
-            <div>
-              <motion.div className="text-accent-2 font-mono font-extrabold text-xl md:text-2xl">
-                <SpringCounter spring={messagesSpring} />
-              </motion.div>
-              <div className="text-dim text-[11px] mt-0.5">Messages Handled</div>
-            </div>
-            <div>
-              <motion.div className="text-accent font-mono font-extrabold text-xl md:text-2xl">
-                <SpringCounter spring={bookingsSpring} />
-              </motion.div>
-              <div className="text-dim text-[11px] mt-0.5">Bookings Made</div>
-            </div>
-            <div>
-              <motion.div className="text-accent-3 font-mono font-extrabold text-xl md:text-2xl">
-                $<SpringCounter spring={savingsSpring} />
-              </motion.div>
-              <div className="text-dim text-[11px] mt-0.5">Revenue Impact</div>
-            </div>
+              return (
+                <button
+                  key={`${event.time}-${i}`}
+                  onClick={() => setActiveIndex(i)}
+                  className={`w-full text-left px-3 py-2 rounded-lg border transition-all ${
+                    isActive ? 'bg-bg-card' : 'bg-bg-card/20'
+                  }`}
+                  style={{
+                    borderColor: isActive ? `${tierColors[event.tier]}30` : 'transparent',
+                    borderLeftWidth: 3,
+                    borderLeftColor: isActive ? tierColors[event.tier] : `${tierColors[event.tier]}20`,
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-mono text-dim">{event.time}</span>
+                    <span className="text-xs">{ch.icon}</span>
+                    <span className={`text-xs font-medium truncate ${isActive ? 'text-white' : 'text-white/60'}`}>
+                      {event.title}
+                    </span>
+                    <span
+                      className="text-[8px] px-1 py-0.5 rounded-full font-mono ml-auto shrink-0"
+                      style={{
+                        color: tierColors[event.tier],
+                        background: `${tierColors[event.tier]}10`,
+                      }}
+                    >
+                      {tierLabels[event.tier].replace('The ', '')}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
     </section>
   );
-}
-
-/* ------------------------------------------------------------------ */
-/* SPRING COUNTER — renders a spring-animated number                    */
-/* ------------------------------------------------------------------ */
-function SpringCounter({ spring }: { spring: ReturnType<typeof useSpring> }) {
-  const [display, setDisplay] = useState(0);
-
-  useEffect(() => {
-    const unsubscribe = spring.on('change', (v: number) => {
-      setDisplay(Math.round(v));
-    });
-    return () => unsubscribe();
-  }, [spring]);
-
-  return <>{display.toLocaleString()}</>;
 }

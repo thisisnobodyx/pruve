@@ -80,7 +80,10 @@ export default function LiveDemo() {
   const leftOpacity = useTransform(scrollYProgress, [0, 0.4], [0, 1]);
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // Scroll the chat container to bottom — NOT the page
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
   }, [messages, loading]);
 
   useEffect(() => {

@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import ParticleNetwork from '@/components/shared/ParticleNetwork';
 import MagneticButton from '@/components/shared/MagneticButton';
-import { employees, getAgentsByIds, type Employee } from '@/components/ai-employees/data';
+import { tierRoles, type TierRole } from '@/components/ai-employees/data';
 
 /* ------------------------------------------------------------------ */
 /* DATA                                                                */
@@ -36,12 +36,11 @@ interface FormData {
 /* TEAM VISUALIZATION: the "wow" element on the right side             */
 /* ------------------------------------------------------------------ */
 function TeamVisualization({ step, form }: { step: number; form: FormData }) {
-  const selectedEmp = employees.find((e) => e.id === form.employeeTier);
-  const empAgents = selectedEmp ? getAgentsByIds(selectedEmp.agentIds) : [];
+  const selectedRole = tierRoles.find((r) => r.id === form.employeeTier);
   const industry = industries.find((i) => i.value === form.industry);
 
   // Calculate how many desks to show based on tier
-  const deskCount = !selectedEmp ? 0 : selectedEmp.id === 'operator' ? 1 : selectedEmp.id === 'manager' ? 2 : 3;
+  const deskCount = !selectedRole ? 0 : selectedRole.id === 'operator' ? 1 : selectedRole.id === 'manager' ? 2 : 3;
 
   return (
     <div className="relative w-full h-full min-h-[400px] lg:min-h-[500px] flex items-center justify-center">
@@ -49,8 +48,8 @@ function TeamVisualization({ step, form }: { step: number; form: FormData }) {
       <div
         className="absolute inset-0 rounded-3xl transition-all duration-700"
         style={{
-          background: selectedEmp
-            ? `radial-gradient(ellipse at center, ${selectedEmp.color}08 0%, transparent 70%)`
+          background: selectedRole
+            ? `radial-gradient(ellipse at center, ${selectedRole.color}08 0%, transparent 70%)`
             : 'radial-gradient(ellipse at center, rgba(124,58,237,0.03) 0%, transparent 70%)',
         }}
       />
@@ -112,7 +111,7 @@ function TeamVisualization({ step, form }: { step: number; form: FormData }) {
             exit={{ opacity: 0 }}
             className="w-full"
           >
-            {!selectedEmp ? (
+            {!selectedRole ? (
               <div className="text-center">
                 <div className="flex justify-center gap-6 mb-6">
                   {[0, 1, 2].map((i) => (
@@ -135,12 +134,12 @@ function TeamVisualization({ step, form }: { step: number; form: FormData }) {
                       transition={{ delay: i * 0.15, ease: [0.34, 1.56, 0.64, 1] }}
                       className="w-20 h-20 rounded-xl flex items-center justify-center text-3xl border"
                       style={{
-                        background: `${selectedEmp.color}10`,
-                        borderColor: `${selectedEmp.color}30`,
-                        boxShadow: `0 0 30px ${selectedEmp.color}12`,
+                        background: `${selectedRole.color}10`,
+                        borderColor: `${selectedRole.color}30`,
+                        boxShadow: `0 0 30px ${selectedRole.color}12`,
                       }}
                     >
-                      {i === 0 ? (selectedEmp.id === 'operator' ? '🎧' : selectedEmp.id === 'manager' ? '📊' : '👔') : '💻'}
+                      {i === 0 ? (selectedRole.id === 'operator' ? '🎧' : selectedRole.id === 'manager' ? '📊' : '👔') : '💻'}
                     </motion.div>
                   ))}
                 </div>
@@ -151,41 +150,40 @@ function TeamVisualization({ step, form }: { step: number; form: FormData }) {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
                 >
-                  <div className="text-white font-extrabold text-lg">{selectedEmp.name}</div>
-                  <div className="font-mono text-sm mt-1" style={{ color: selectedEmp.color }}>
-                    ${selectedEmp.price}/mo
+                  <div className="text-white font-extrabold text-lg">{selectedRole.name}</div>
+                  <div className="font-mono text-sm mt-1" style={{ color: selectedRole.color }}>
+                    ${selectedRole.price}/mo
                   </div>
                 </motion.div>
 
-                {/* Orbiting agents */}
+                {/* Capabilities */}
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.5 }}
                   className="flex flex-wrap justify-center gap-2 mt-4"
                 >
-                  {empAgents.map((agent, i) => (
+                  {selectedRole.capabilities.map((cap, i) => (
                     <motion.div
-                      key={agent.id}
+                      key={cap}
                       initial={{ opacity: 0, scale: 0 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.6 + i * 0.08, ease: [0.34, 1.56, 0.64, 1] }}
-                      className="w-9 h-9 rounded-lg flex items-center justify-center text-sm"
-                      style={{ background: `${agent.color}15`, border: `1px solid ${agent.color}25` }}
-                      title={agent.name}
+                      className="text-[9px] px-2 py-1 rounded-full border"
+                      style={{ color: selectedRole.color, borderColor: `${selectedRole.color}25`, background: `${selectedRole.color}06` }}
                     >
-                      {agent.icon}
+                      {cap}
                     </motion.div>
                   ))}
                 </motion.div>
-                <p className="text-dim text-xs mt-3">{empAgents.length} agents working for you</p>
+                <p className="text-dim text-xs mt-3">{selectedRole.capabilities.length} capabilities included</p>
               </div>
             )}
           </motion.div>
         )}
 
         {/* Step 4: Speech bubble */}
-        {step === 4 && selectedEmp && (
+        {step === 4 && selectedRole && (
           <motion.div
             key="step4-vis"
             initial={{ opacity: 0, scale: 0.8 }}
@@ -196,11 +194,11 @@ function TeamVisualization({ step, form }: { step: number; form: FormData }) {
             <div
               className="w-20 h-20 rounded-xl flex items-center justify-center text-4xl mx-auto mb-4 border"
               style={{
-                background: `${selectedEmp.color}10`,
-                borderColor: `${selectedEmp.color}30`,
+                background: `${selectedRole.color}10`,
+                borderColor: `${selectedRole.color}30`,
               }}
             >
-              {selectedEmp.id === 'operator' ? '🎧' : selectedEmp.id === 'manager' ? '📊' : '👔'}
+              {selectedRole.id === 'operator' ? '🎧' : selectedRole.id === 'manager' ? '📊' : '👔'}
             </div>
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -224,9 +222,9 @@ function TeamVisualization({ step, form }: { step: number; form: FormData }) {
             className="text-center"
           >
             {/* Celebration effect */}
-            {employees.map((emp, i) => (
+            {tierRoles.map((role, i) => (
               <motion.div
-                key={emp.id}
+                key={role.id}
                 initial={{ opacity: 0, y: 30, scale: 0.7 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ delay: i * 0.2, ease: [0.34, 1.56, 0.64, 1] }}
@@ -235,12 +233,12 @@ function TeamVisualization({ step, form }: { step: number; form: FormData }) {
                 <div
                   className="w-16 h-16 rounded-xl flex items-center justify-center text-2xl border animate-pulse"
                   style={{
-                    background: `${emp.color}15`,
-                    borderColor: `${emp.color}30`,
-                    boxShadow: `0 0 40px ${emp.color}20`,
+                    background: `${role.color}15`,
+                    borderColor: `${role.color}30`,
+                    boxShadow: `0 0 40px ${role.color}20`,
                   }}
                 >
-                  {emp.id === 'operator' ? '🎧' : emp.id === 'manager' ? '📊' : '👔'}
+                  {role.id === 'operator' ? '🎧' : role.id === 'manager' ? '📊' : '👔'}
                 </div>
               </motion.div>
             ))}
@@ -263,10 +261,9 @@ function TeamVisualization({ step, form }: { step: number; form: FormData }) {
 /* LIVE PREVIEW CARD: updates in real-time                             */
 /* ------------------------------------------------------------------ */
 function LivePreviewCard({ form }: { form: FormData }) {
-  const selectedEmp = employees.find((e) => e.id === form.employeeTier);
-  const empAgents = selectedEmp ? getAgentsByIds(selectedEmp.agentIds) : [];
+  const selectedRole = tierRoles.find((r) => r.id === form.employeeTier);
 
-  if (!selectedEmp) return null;
+  if (!selectedRole) return null;
 
   return (
     <motion.div
@@ -278,23 +275,23 @@ function LivePreviewCard({ form }: { form: FormData }) {
       <div className="flex items-center gap-3 mb-3">
         <div
           className="w-8 h-8 rounded-lg flex items-center justify-center text-sm"
-          style={{ background: `${selectedEmp.color}15` }}
+          style={{ background: `${selectedRole.color}15` }}
         >
-          {selectedEmp.id === 'operator' ? '🎧' : selectedEmp.id === 'manager' ? '📊' : '👔'}
+          {selectedRole.id === 'operator' ? '🎧' : selectedRole.id === 'manager' ? '📊' : '👔'}
         </div>
         <div>
-          <div className="text-white text-sm font-bold">{selectedEmp.name}</div>
-          <div className="text-xs font-mono" style={{ color: selectedEmp.color }}>${selectedEmp.price}/mo</div>
+          <div className="text-white text-sm font-bold">{selectedRole.name}</div>
+          <div className="text-xs font-mono" style={{ color: selectedRole.color }}>${selectedRole.price}/mo</div>
         </div>
       </div>
       <div className="flex flex-wrap gap-1.5 mb-2">
-        {empAgents.map((a) => (
-          <span key={a.id} className="text-[9px] px-2 py-0.5 rounded-full border" style={{ color: a.color, borderColor: `${a.color}30` }}>
-            {a.name}
+        {selectedRole.capabilities.map((cap) => (
+          <span key={cap} className="text-[9px] px-2 py-0.5 rounded-full border" style={{ color: selectedRole.color, borderColor: `${selectedRole.color}30` }}>
+            {cap}
           </span>
         ))}
       </div>
-      <div className="text-dim text-[10px]">{empAgents.length} agents included • 24/7 • 48hr setup</div>
+      <div className="text-dim text-[10px]">{selectedRole.capabilities.length} capabilities • 24/7 • 48hr setup</div>
     </motion.div>
   );
 }
@@ -531,47 +528,46 @@ export default function ContactPage() {
                     <p className="text-dim text-sm">Each tier includes all agents from the tier below.</p>
                   </div>
                   <div className="space-y-3">
-                    {employees.map((emp) => {
-                      const isSelected = form.employeeTier === emp.id;
-                      const empAgents = getAgentsByIds(emp.agentIds);
+                    {tierRoles.map((role) => {
+                      const isSelected = form.employeeTier === role.id;
                       return (
                         <button
-                          key={emp.id}
-                          onClick={() => updateField('employeeTier', emp.id)}
+                          key={role.id}
+                          onClick={() => updateField('employeeTier', role.id)}
                           className={`w-full text-left p-5 rounded-2xl border transition-all duration-300 ${
                             isSelected ? 'shadow-lg' : 'hover:border-white/15'
                           }`}
                           style={{
-                            background: isSelected ? `${emp.color}08` : undefined,
-                            borderColor: isSelected ? `${emp.color}40` : 'rgba(255,255,255,0.05)',
-                            boxShadow: isSelected ? `0 0 40px ${emp.color}10` : undefined,
+                            background: isSelected ? `${role.color}08` : undefined,
+                            borderColor: isSelected ? `${role.color}40` : 'rgba(255,255,255,0.05)',
+                            boxShadow: isSelected ? `0 0 40px ${role.color}10` : undefined,
                           }}
                         >
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-3">
                               <div className="text-2xl">
-                                {emp.id === 'operator' ? '🎧' : emp.id === 'manager' ? '📊' : '👔'}
+                                {role.id === 'operator' ? '🎧' : role.id === 'manager' ? '📊' : '👔'}
                               </div>
                               <div>
-                                <div className="text-white font-extrabold">{emp.name}</div>
-                                <div className="text-dim text-xs">{emp.title}</div>
+                                <div className="text-white font-extrabold">{role.name}</div>
+                                <div className="text-dim text-xs">{role.label}</div>
                               </div>
                             </div>
                             <div className="text-right">
-                              <div className="font-mono font-bold" style={{ color: emp.color }}>
-                                ${emp.price}/mo
+                              <div className="font-mono font-bold" style={{ color: role.color }}>
+                                ${role.price}/mo
                               </div>
                             </div>
                           </div>
-                          <p className="text-dim text-xs mb-3">{emp.desc}</p>
+                          <p className="text-dim text-xs mb-3">{role.shortDesc}</p>
                           <div className="flex flex-wrap gap-1.5">
-                            {empAgents.map((a) => (
+                            {role.capabilities.map((cap) => (
                               <span
-                                key={a.id}
+                                key={cap}
                                 className="text-[9px] px-2 py-0.5 rounded-full border"
-                                style={{ color: a.color, borderColor: `${a.color}25`, background: `${a.color}06` }}
+                                style={{ color: role.color, borderColor: `${role.color}25`, background: `${role.color}06` }}
                               >
-                                {a.icon} {a.name}
+                                {cap}
                               </span>
                             ))}
                           </div>
@@ -581,19 +577,19 @@ export default function ContactPage() {
                               className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all ${
                                 isSelected ? '' : 'border-white/15'
                               }`}
-                              style={isSelected ? { borderColor: emp.color } : undefined}
+                              style={isSelected ? { borderColor: role.color } : undefined}
                             >
                               {isSelected && (
                                 <motion.div
                                   initial={{ scale: 0 }}
                                   animate={{ scale: 1 }}
                                   className="w-2 h-2 rounded-full"
-                                  style={{ background: emp.color }}
+                                  style={{ background: role.color }}
                                 />
                               )}
                             </div>
-                            <span className="text-[10px]" style={{ color: isSelected ? emp.color : 'rgba(255,255,255,0.3)' }}>
-                              {isSelected ? 'Selected' : `Select ${emp.name}`}
+                            <span className="text-[10px]" style={{ color: isSelected ? role.color : 'rgba(255,255,255,0.3)' }}>
+                              {isSelected ? 'Selected' : `Select ${role.name}`}
                             </span>
                           </div>
                         </button>
@@ -652,7 +648,7 @@ export default function ContactPage() {
                     <div className="text-white text-sm mb-1"><strong>Company:</strong> {form.company}</div>
                     {form.employeeTier && (
                       <div className="text-white text-sm">
-                        <strong>Plan:</strong> {employees.find((e) => e.id === form.employeeTier)?.name}
+                        <strong>Plan:</strong> {tierRoles.find((r) => r.id === form.employeeTier)?.name}
                       </div>
                     )}
                   </div>
