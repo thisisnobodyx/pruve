@@ -229,19 +229,78 @@ const comparisonData: ComparisonCategory[] = [
 
 interface AgentCard {
   name: string;
+  icon: string;
   description: string;
+  highlights: string[];
   includedIn: string;
+  href: string;
 }
 
 const agentCards: AgentCard[] = [
-  { name: 'WhatsApp Agent', description: '24/7 customer conversations', includedIn: 'Operator+' },
-  { name: 'AI Receptionist', description: 'Answers every inquiry and books appointments', includedIn: 'Operator+' },
-  { name: 'Lead Capture', description: 'Catches, scores, and follows up every lead', includedIn: 'Operator+' },
-  { name: 'Content Engine', description: 'Writes and schedules all your content', includedIn: 'Manager+' },
-  { name: 'Social Media AI', description: 'Manages all social posting and engagement', includedIn: 'Manager+' },
-  { name: 'Workflow Automation', description: 'Connects tools, eliminates manual work', includedIn: 'Manager+' },
-  { name: 'Multi-Channel Bot', description: 'One AI across every platform', includedIn: 'Executive+' },
-  { name: 'Competitive Intelligence', description: 'Monitors competitors daily', includedIn: 'Executive+' },
+  {
+    name: 'WhatsApp Agent',
+    icon: '💬',
+    description: '24/7 customer conversations on WhatsApp with instant responses, voice note support, and full conversation memory.',
+    highlights: ['Instant replies 24/7', 'Voice note understanding', 'Customer memory'],
+    includedIn: 'Operator+',
+    href: '/services/whatsapp-agent',
+  },
+  {
+    name: 'AI Receptionist',
+    icon: '📞',
+    description: 'Answers every inquiry, books appointments, sends confirmations, and fills cancelled slots automatically.',
+    highlights: ['Auto-booking', 'Confirmations & reminders', 'Cancelled slot filling'],
+    includedIn: 'Operator+',
+    href: '/services/ai-receptionist',
+  },
+  {
+    name: 'Lead Capture',
+    icon: '🧲',
+    description: 'Catches every lead from every channel, scores them, sends intake forms, and follows up on autopilot.',
+    highlights: ['Lead scoring', 'Auto follow-up', 'Intake form chasing'],
+    includedIn: 'Operator+',
+    href: '/services/lead-capture',
+  },
+  {
+    name: 'Content Engine',
+    icon: '✍️',
+    description: 'Writes and schedules social posts, newsletters, blog drafts, and ad copy — researches trends daily.',
+    highlights: ['Weekly social posts', 'Email newsletters', 'Trend research'],
+    includedIn: 'Manager+',
+    href: '/services/content-engine',
+  },
+  {
+    name: 'Social Media AI',
+    icon: '📱',
+    description: 'Manages your entire social presence — posting, engagement, DM responses, and performance tracking.',
+    highlights: ['Cross-platform posting', 'DM management', 'Engagement tracking'],
+    includedIn: 'Manager+',
+    href: '/services/social-media',
+  },
+  {
+    name: 'Workflow Automation',
+    icon: '⚙️',
+    description: 'Connects all your tools, eliminates manual data entry, and automates repetitive business processes.',
+    highlights: ['Tool integration', 'Zero manual entry', 'Email classification'],
+    includedIn: 'Manager+',
+    href: '/services/workflow',
+  },
+  {
+    name: 'Multi-Channel Bot',
+    icon: '🌐',
+    description: 'One AI brain across every platform — Instagram, Facebook, Telegram, iMessage, email, and more.',
+    highlights: ['All channels in one brain', 'Cross-channel context', 'Unified inbox'],
+    includedIn: 'Executive+',
+    href: '/services/multi-channel',
+  },
+  {
+    name: 'Competitive Intelligence',
+    icon: '🔍',
+    description: 'Monitors competitor websites, reviews, and pricing daily. Weekly intelligence reports delivered automatically.',
+    highlights: ['Daily competitor scans', 'Review monitoring', 'Price tracking'],
+    includedIn: 'Executive+',
+    href: '/services/smart-website',
+  },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -255,7 +314,6 @@ interface ProjectRow {
 }
 
 const projects: ProjectRow[] = [
-  { name: 'AI Business Audit', price: '$497 (credited to setup fee)' },
   { name: 'Custom Website Design', price: 'Request Quote', href: '/services/web-design' },
   { name: 'E-commerce Store', price: 'Request Quote', href: '/services/web-design' },
   { name: 'SEO Setup & Strategy', price: 'Request Quote', href: '/services/seo' },
@@ -655,6 +713,12 @@ function AIAgentsSection() {
     return '#C8F135';
   }
 
+  function getIncludedLabel(includedIn: string): string {
+    if (includedIn.startsWith('Operator')) return 'Included in The Operator+';
+    if (includedIn.startsWith('Manager')) return 'Included in The Manager+';
+    return 'Included in The Executive+';
+  }
+
   return (
     <section ref={sectionRef} className="py-section px-6 bg-bg-2">
       <div className="max-w-6xl mx-auto">
@@ -663,7 +727,7 @@ function AIAgentsSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-8"
         >
           <span className="font-mono text-sm tracking-widest uppercase text-accent mb-4 block">
             AI Agents
@@ -672,90 +736,145 @@ function AIAgentsSection() {
             Just need one specific thing?
           </h2>
           <p className="text-dim text-lg max-w-2xl mx-auto">
-            Any standalone agent, configured for your business. Or add one to your existing Employee plan.
+            Every agent is included in your AI Employee plan. Or pick one standalone.
           </p>
         </motion.div>
 
-        {/* Pricing states */}
+        {/* Pricing legend */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="flex flex-wrap justify-center gap-4 md:gap-8 mb-12"
+          transition={{ delay: 0.15, duration: 0.5 }}
+          className="flex flex-wrap items-center justify-center gap-6 mb-14"
         >
-          <div className="bg-bg-card border border-border rounded-xl px-5 py-3 text-center">
-            <div className="text-white text-sm font-bold">Standalone</div>
-            <div className="text-dim text-xs font-mono">$197/mo + $297 setup</div>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-white/40" />
+            <span className="text-dim text-xs">
+              <span className="text-white font-bold">$197/mo</span>{' '}
+              <span className="text-dim">standalone</span>{' '}
+              <span className="text-white/30">·</span>{' '}
+              <span className="text-dim">$297 setup</span>
+            </span>
           </div>
-          <div className="bg-bg-card border border-border rounded-xl px-5 py-3 text-center">
-            <div className="text-white text-sm font-bold">Add-on</div>
-            <div className="text-dim text-xs font-mono">$97/mo</div>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-white/40" />
+            <span className="text-dim text-xs">
+              <span className="text-white font-bold">$97/mo</span>{' '}
+              <span className="text-dim">add-on to existing plan</span>
+            </span>
           </div>
-          <div className="bg-bg-card border border-accent-2/25 rounded-xl px-5 py-3 text-center">
-            <div className="text-accent-2 text-sm font-bold">Included</div>
-            <div className="text-dim text-xs font-mono">$0</div>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-accent" />
+            <span className="text-dim text-xs">
+              <span className="text-accent font-bold">Free</span>{' '}
+              <span className="text-dim">when included in your plan</span>
+            </span>
           </div>
         </motion.div>
 
-        {/* Agent grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
+        {/* Agent grid — 2 columns on desktop for larger cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-12">
           {agentCards.map((agent, i) => {
             const color = getIncludedColor(agent.includedIn);
             return (
               <motion.div
                 key={agent.name}
-                initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+                initial={{ opacity: 0, y: 25 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{
-                  delay: 0.3 + i * 0.08,
+                  delay: 0.2 + i * 0.06,
                   duration: 0.5,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="bg-bg-card border border-border rounded-xl p-5 hover:border-white/15 transition-all group"
+                className="relative bg-bg-card border border-border rounded-2xl p-6 hover:border-white/15 transition-all group overflow-hidden"
               >
-                <h4 className="text-white text-sm font-bold mb-1 group-hover:text-accent transition-colors">
-                  {agent.name}
-                </h4>
-                <p className="text-dim text-xs mb-4 leading-relaxed">
-                  {agent.description}
-                </p>
-                <div className="flex items-center gap-1.5">
+                {/* Subtle glow on hover */}
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                  style={{
+                    background: `radial-gradient(ellipse at top left, ${color}08, transparent 70%)`,
+                  }}
+                />
+
+                <div className="relative z-10 flex gap-4">
+                  {/* Icon */}
                   <div
-                    className="w-1.5 h-1.5 rounded-full"
-                    style={{ background: color }}
-                  />
-                  <span
-                    className="text-[11px] font-mono font-medium"
+                    className="w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0 border"
+                    style={{
+                      background: `${color}08`,
+                      borderColor: `${color}20`,
+                    }}
+                  >
+                    {agent.icon}
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <h4 className="text-white text-base font-bold group-hover:text-white transition-colors">
+                        {agent.name}
+                      </h4>
+                      {/* Tier badge */}
+                      <span
+                        className="text-[10px] font-bold px-2.5 py-1 rounded-full border whitespace-nowrap shrink-0"
+                        style={{
+                          color,
+                          borderColor: `${color}30`,
+                          background: `${color}10`,
+                        }}
+                      >
+                        {agent.includedIn}
+                      </span>
+                    </div>
+
+                    <p className="text-dim text-sm leading-relaxed mb-3">
+                      {agent.description}
+                    </p>
+
+                    {/* Highlights */}
+                    <div className="flex flex-wrap gap-2">
+                      {agent.highlights.map((h) => (
+                        <span
+                          key={h}
+                          className="text-[11px] px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/[0.06] text-dim"
+                        >
+                          {h}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom bar */}
+                <div className="relative z-10 mt-4 pt-3 border-t border-border flex items-center justify-between">
+                  <span className="text-[11px] text-dim font-mono">
+                    {getIncludedLabel(agent.includedIn)}
+                  </span>
+                  <Link
+                    href={agent.href}
+                    className="text-[11px] font-bold transition-colors hover:underline"
                     style={{ color }}
                   >
-                    Included: {agent.includedIn}
-                  </span>
+                    Learn more →
+                  </Link>
                 </div>
               </motion.div>
             );
           })}
         </div>
 
-        {/* AI Audit CTA */}
+        {/* Simple CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.6, duration: 0.5 }}
-          className="bg-bg-card border border-accent/20 rounded-2xl p-8 md:p-10 text-center max-w-3xl mx-auto"
-          style={{ boxShadow: '0 0 60px rgba(124, 58, 237, 0.06)' }}
+          className="text-center"
         >
-          <p className="text-dim text-sm md:text-base leading-relaxed mb-6">
-            Not sure which agents you need? Start with an{' '}
-            <span className="text-white font-bold">AI Business Audit</span> — we
-            map your workflow and tell you exactly what to activate.{' '}
-            <span className="text-accent font-bold font-mono">$497</span>,
-            credited to your setup fee.
-          </p>
           <MagneticButton
             href="/contact"
             className="bg-accent text-bg font-bold px-8 py-3 rounded-pill text-sm"
           >
-            Book an AI Audit
+            Get Started →
           </MagneticButton>
         </motion.div>
       </div>
