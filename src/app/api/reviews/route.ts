@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 
+// Force dynamic so env vars are read at runtime, not baked in at build
+export const dynamic = 'force-dynamic';
+
 /**
  * Google Places API Reviews endpoint.
  * Fetches reviews from the Google Places API and caches them.
@@ -50,10 +53,11 @@ export async function GET() {
 
   try {
     const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=reviews,rating,user_ratings_total,name&key=${apiKey}`;
-    const res = await fetch(url, { next: { revalidate: 3600 } });
+    const res = await fetch(url, { cache: 'no-store' });
     const data: GooglePlaceResult = await res.json();
 
     if (data.status !== 'OK' || !data.result?.reviews) {
+      console.error('Google Places API error response:', JSON.stringify(data));
       return NextResponse.json(
         { reviews: [], error: `Google API status: ${data.status}` },
         { status: 200 }
