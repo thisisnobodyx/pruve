@@ -27,7 +27,7 @@ function score(v: number): 'pass' | 'warning' | 'fail' {
 async function crawlPage(targetUrl: string) {
   const res = await fetch(targetUrl, {
     headers: {
-      'User-Agent': 'Mozilla/5.0 (compatible; PruveSEOBot/1.0; +https://pruve.co)',
+      'User-Agent': 'Mozilla/5.0 (compatible; PruveSEOBot/1.0; +https://pruve.ca)',
       'Accept': 'text/html,application/xhtml+xml',
     },
     redirect: 'follow',

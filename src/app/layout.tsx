@@ -14,8 +14,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Pruve.co — AI Automation Agency",
-    template: "%s | Pruve.co",
+    default: "Pruve.ca — AI Automation Agency",
+    template: "%s | Pruve.ca",
   },
   description:
     "We build AI agents, automations, and intelligent systems that run your business while you focus on what matters.",
@@ -27,19 +27,19 @@ export const metadata: Metadata = {
     "workflow automation",
     "AI receptionist",
   ],
-  authors: [{ name: "Pruve.co" }],
+  authors: [{ name: "Pruve.ca" }],
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://pruve.co",
-    siteName: "Pruve.co",
-    title: "Pruve.co — AI Automation Agency",
+    url: "https://pruve.ca",
+    siteName: "Pruve.ca",
+    title: "Pruve.ca — AI Automation Agency",
     description:
       "We build AI agents, automations, and intelligent systems that run your business while you focus on what matters.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pruve.co — AI Automation Agency",
+    title: "Pruve.ca — AI Automation Agency",
     description:
       "We build AI agents, automations, and intelligent systems that run your business while you focus on what matters.",
   },

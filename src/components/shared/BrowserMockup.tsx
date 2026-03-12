@@ -11,7 +11,7 @@ interface BrowserMockupProps {
 export default function BrowserMockup({
   children,
   className = '',
-  url = 'pruve.co',
+  url = 'pruve.ca',
 }: BrowserMockupProps) {
   return (
     <div className={`relative ${className}`}>

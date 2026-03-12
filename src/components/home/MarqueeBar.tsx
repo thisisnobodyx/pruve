@@ -11,7 +11,7 @@ const ROW_1_ITEMS = [
   '24/7 Operations',
   'Smart Automation',
   '40+ Industries',
-  'pruve.co',
+  'pruve.ca',
 ];
 
 const ROW_2_ITEMS = [
@@ -21,7 +21,7 @@ const ROW_2_ITEMS = [
   'Lead Capture',
   '24/7 Operations',
   'AI Agents',
-  'pruve.co',
+  'pruve.ca',
   'WhatsApp & Instagram',
 ];
 

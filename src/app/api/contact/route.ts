@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-const OWNER_EMAIL = process.env.CONTACT_EMAIL || 'hello@pruve.co';
+const OWNER_EMAIL = process.env.CONTACT_EMAIL || 'hello@pruve.ca';
 
 export async function POST(request: Request) {
   try {
     const apiKey = process.env.RESEND_API_KEY;
     if (!apiKey) {
       return NextResponse.json(
-        { error: 'Email service not configured. Please contact us directly at hello@pruve.co' },
+        { error: 'Email service not configured. Please contact us directly at hello@pruve.ca' },
         { status: 500 },
       );
     }
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #0F0A1E; color: #F2F0EB; padding: 32px; border-radius: 12px;">
         <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; margin-bottom: 24px;">
           <h1 style="color: #7C3AED; font-size: 24px; margin: 0 0 4px;">New Contact Form Submission</h1>
-          <p style="color: #9590A8; font-size: 14px; margin: 0;">From pruve.co contact page</p>
+          <p style="color: #9590A8; font-size: 14px; margin: 0;">From pruve.ca contact page</p>
         </div>
 
         <table style="width: 100%; border-collapse: collapse;">
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
     `;
 
     const { error } = await resend.emails.send({
-      from: 'Pruve Contact Form <contact@pruve.co>',
+      from: 'Pruve Contact Form <contact@pruve.ca>',
       to: [OWNER_EMAIL],
       replyTo: email,
       subject: `New inquiry from ${name} — ${serviceName}`,

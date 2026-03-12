@@ -283,7 +283,7 @@ export default function InteractiveDemo() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <BrowserMockup url={`${selectedIndustry.id}.pruve.co`} className="w-full">
+            <BrowserMockup url={`${selectedIndustry.id}.pruve.ca`} className="w-full">
               <LivePreview style={selectedStyle} industry={selectedIndustry} />
             </BrowserMockup>
 
