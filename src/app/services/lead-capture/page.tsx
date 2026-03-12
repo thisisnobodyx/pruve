@@ -4,6 +4,7 @@ import ProblemSection from '@/components/services/lead-capture/ProblemSection';
 import InteractiveDemo from '@/components/services/lead-capture/InteractiveDemo';
 import HowItWorks from '@/components/services/lead-capture/HowItWorks';
 import ResultsSection from '@/components/services/lead-capture/ResultsSection';
+import Testimonials from '@/components/home/Testimonials';
 
 export const metadata = {
   title: 'Lead Capture — Pruve',
@@ -19,6 +20,7 @@ export default function LeadCapturePage() {
       <ProblemSection />
       <InteractiveDemo />
       <HowItWorks />
+      <Testimonials />
       <ResultsSection />
     </main>
   );

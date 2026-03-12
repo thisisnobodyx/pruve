@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import Link from 'next/link';
 import MagneticButton from '@/components/shared/MagneticButton';
+import Testimonials from '@/components/home/Testimonials';
 
 /* ------------------------------------------------------------------ */
 /* TYPES & DATA                                                        */
@@ -1043,6 +1044,7 @@ export default function PricingPage() {
       <AIEmployeesSection />
       <AIAgentsSection />
       <OneTimeProjectsSection />
+      <Testimonials />
       <FAQSection />
     </>
   );

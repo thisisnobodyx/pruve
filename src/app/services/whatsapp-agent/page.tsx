@@ -4,6 +4,7 @@ import ProblemSection from '@/components/services/whatsapp-agent/ProblemSection'
 import InteractiveDemo from '@/components/services/whatsapp-agent/InteractiveDemo';
 import HowItWorks from '@/components/services/whatsapp-agent/HowItWorks';
 import ResultsSection from '@/components/services/whatsapp-agent/ResultsSection';
+import Testimonials from '@/components/home/Testimonials';
 
 export const metadata = {
   title: 'WhatsApp Agent — Pruve',
@@ -19,6 +20,7 @@ export default function WhatsAppAgentPage() {
       <ProblemSection />
       <InteractiveDemo />
       <HowItWorks />
+      <Testimonials />
       <ResultsSection />
     </main>
   );

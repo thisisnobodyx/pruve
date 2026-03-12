@@ -3,6 +3,7 @@ import ProblemSection from '@/components/services/smart-website/ProblemSection';
 import InteractiveDemo from '@/components/services/smart-website/InteractiveDemo';
 import HowItWorks from '@/components/services/smart-website/HowItWorks';
 import ResultsSection from '@/components/services/smart-website/ResultsSection';
+import Testimonials from '@/components/home/Testimonials';
 import ScrollToTop from '@/components/shared/ScrollToTop';
 
 export const metadata = {
@@ -19,6 +20,7 @@ export default function SmartWebsitePage() {
       <ProblemSection />
       <InteractiveDemo />
       <HowItWorks />
+      <Testimonials />
       <ResultsSection />
     </>
   );

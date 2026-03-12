@@ -4,6 +4,7 @@ import ProblemSection from '@/components/services/multi-channel/ProblemSection';
 import InteractiveDemo from '@/components/services/multi-channel/InteractiveDemo';
 import HowItWorks from '@/components/services/multi-channel/HowItWorks';
 import ResultsSection from '@/components/services/multi-channel/ResultsSection';
+import Testimonials from '@/components/home/Testimonials';
 
 export const metadata = {
   title: 'Multi-Channel Inbox — Pruve',
@@ -19,6 +20,7 @@ export default function MultiChannelPage() {
       <ProblemSection />
       <InteractiveDemo />
       <HowItWorks />
+      <Testimonials />
       <ResultsSection />
     </main>
   );

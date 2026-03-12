@@ -4,6 +4,7 @@ import ProblemSection from '@/components/services/content-engine/ProblemSection'
 import InteractiveDemo from '@/components/services/content-engine/InteractiveDemo';
 import HowItWorks from '@/components/services/content-engine/HowItWorks';
 import ResultsSection from '@/components/services/content-engine/ResultsSection';
+import Testimonials from '@/components/home/Testimonials';
 
 export const metadata = {
   title: 'Content Engine — Pruve',
@@ -18,6 +19,7 @@ export default function ContentEnginePage() {
       <ProblemSection />
       <InteractiveDemo />
       <HowItWorks />
+      <Testimonials />
       <ResultsSection />
     </main>
   );

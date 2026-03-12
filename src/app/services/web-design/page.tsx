@@ -4,6 +4,7 @@ import ProblemSection from '@/components/services/web-design/ProblemSection';
 import InteractiveDemo from '@/components/services/web-design/InteractiveDemo';
 import HowItWorks from '@/components/services/web-design/HowItWorks';
 import ResultsSection from '@/components/services/web-design/ResultsSection';
+import Testimonials from '@/components/home/Testimonials';
 
 export const metadata = {
   title: 'Web Design — Pruve',
@@ -19,6 +20,7 @@ export default function WebDesignRoute() {
       <ProblemSection />
       <InteractiveDemo />
       <HowItWorks />
+      <Testimonials />
       <ResultsSection />
     </main>
   );

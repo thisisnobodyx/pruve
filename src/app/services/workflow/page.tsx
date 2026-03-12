@@ -4,6 +4,7 @@ import ProblemSection from '@/components/services/workflow/ProblemSection';
 import InteractiveDemo from '@/components/services/workflow/InteractiveDemo';
 import HowItWorks from '@/components/services/workflow/HowItWorks';
 import ResultsSection from '@/components/services/workflow/ResultsSection';
+import Testimonials from '@/components/home/Testimonials';
 
 export const metadata = {
   title: 'Workflow Automation — Pruve',
@@ -19,6 +20,7 @@ export default function WorkflowPage() {
       <ProblemSection />
       <InteractiveDemo />
       <HowItWorks />
+      <Testimonials />
       <ResultsSection />
     </main>
   );

@@ -4,6 +4,7 @@ import ProblemSection from '@/components/services/seo/ProblemSection';
 import InteractiveDemo from '@/components/services/seo/InteractiveDemo';
 import HowItWorks from '@/components/services/seo/HowItWorks';
 import ResultsSection from '@/components/services/seo/ResultsSection';
+import Testimonials from '@/components/home/Testimonials';
 
 export const metadata = {
   title: 'SEO Services — Pruve',
@@ -19,6 +20,7 @@ export default function SEORoute() {
       <ProblemSection />
       <InteractiveDemo />
       <HowItWorks />
+      <Testimonials />
       <ResultsSection />
     </main>
   );

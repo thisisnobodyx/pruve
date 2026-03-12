@@ -5,6 +5,7 @@ import EmployeeChatDemo from './EmployeeChatDemo';
 import EmployeeTierSelector from './EmployeeTierSelector';
 import EmployeeProblemSection from './EmployeeProblemSection';
 import CostComparison from './CostComparison';
+import Testimonials from '@/components/home/Testimonials';
 
 export default function AIEmployeesPage() {
   return (
@@ -18,6 +19,7 @@ export default function AIEmployeesPage() {
       {/* Section 4: Not a Chatbot */}
       <EmployeeProblemSection />
       {/* Section 5: Technology + Section 6: CTA */}
+      <Testimonials />
       <CostComparison />
     </>
   );

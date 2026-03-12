@@ -4,6 +4,7 @@ import ProblemSection from '@/components/services/ai-receptionist/ProblemSection
 import InteractiveDemo from '@/components/services/ai-receptionist/InteractiveDemo';
 import HowItWorks from '@/components/services/ai-receptionist/HowItWorks';
 import ResultsSection from '@/components/services/ai-receptionist/ResultsSection';
+import Testimonials from '@/components/home/Testimonials';
 
 export const metadata = {
   title: 'AI Receptionist — Pruve',
@@ -18,6 +19,7 @@ export default function AIReceptionistPage() {
       <ProblemSection />
       <InteractiveDemo />
       <HowItWorks />
+      <Testimonials />
       <ResultsSection />
     </main>
   );

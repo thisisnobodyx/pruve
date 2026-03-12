@@ -4,6 +4,7 @@ import ProblemSection from '@/components/services/social-media/ProblemSection';
 import InteractiveDemo from '@/components/services/social-media/InteractiveDemo';
 import HowItWorks from '@/components/services/social-media/HowItWorks';
 import ResultsSection from '@/components/services/social-media/ResultsSection';
+import Testimonials from '@/components/home/Testimonials';
 
 export const metadata = {
   title: 'Social Media AI — Pruve',
@@ -19,6 +20,7 @@ export default function SocialMediaPage() {
       <ProblemSection />
       <InteractiveDemo />
       <HowItWorks />
+      <Testimonials />
       <ResultsSection />
     </main>
   );
