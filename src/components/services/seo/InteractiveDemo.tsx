@@ -80,14 +80,20 @@ export default function InteractiveDemo() {
       setScanProgress((p) => Math.min(p + 2, 90));
     }, 200);
 
+    const controller = new AbortController();
+    const clientTimeout = setTimeout(() => controller.abort(), 30_000);
+
     try {
-      const res = await fetch(`/api/seo-audit?url=${encodeURIComponent(url)}`);
+      const res = await fetch(`/api/seo-audit?url=${encodeURIComponent(url)}`, {
+        signal: controller.signal,
+      });
+      clearTimeout(clientTimeout);
       const data = await res.json();
 
       clearInterval(progressInterval);
 
       if (!res.ok) {
-        setError(data.error || 'Audit failed');
+        setError(data.error || 'Audit failed — try again or check the URL');
         setIsScanning(false);
         return;
       }
@@ -100,8 +106,12 @@ export default function InteractiveDemo() {
       setIsScanning(false);
       setShowResults(true);
     } catch (err: any) {
+      clearTimeout(clientTimeout);
       clearInterval(progressInterval);
-      setError(err.message || 'Network error');
+      const msg = err.name === 'AbortError'
+        ? 'Audit timed out — the site may be too slow or blocking requests. Try again.'
+        : (err.message || 'Network error — please check the URL and try again');
+      setError(msg);
       setIsScanning(false);
     }
   };

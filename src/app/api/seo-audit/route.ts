@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import * as cheerio from 'cheerio';
 
+/* Allow up to 30s on serverless (Vercel hobby = 10s, pro = 60s) */
+export const maxDuration = 30;
+
 /* ------------------------------------------------------------------ */
 /* TYPES                                                               */
 /* ------------------------------------------------------------------ */
@@ -23,8 +26,12 @@ function score(v: number): 'pass' | 'warning' | 'fail' {
 /* ------------------------------------------------------------------ */
 async function crawlPage(targetUrl: string) {
   const res = await fetch(targetUrl, {
-    headers: { 'User-Agent': 'PruveSEOBot/1.0 (+https://pruve.co)' },
-    signal: AbortSignal.timeout(10_000),
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (compatible; PruveSEOBot/1.0; +https://pruve.co)',
+      'Accept': 'text/html,application/xhtml+xml',
+    },
+    redirect: 'follow',
+    signal: AbortSignal.timeout(15_000),
   });
 
   const finalUrl = res.url;
@@ -203,7 +210,7 @@ async function fetchPageSpeed(targetUrl: string): Promise<AuditResult[]> {
     endpoint.searchParams.append('category', 'performance');
     endpoint.searchParams.append('category', 'seo');
 
-    const res = await fetch(endpoint.toString(), { signal: AbortSignal.timeout(50_000) });
+    const res = await fetch(endpoint.toString(), { signal: AbortSignal.timeout(25_000) });
     if (!res.ok) return [];
     const data = await res.json();
 
@@ -294,12 +301,25 @@ export async function GET(request: Request) {
     const parsedUrl = new URL(rawUrl);
     const origin = parsedUrl.origin;
 
-    // Run all checks in parallel
-    const [crawlItems, psiItems, fileItems] = await Promise.all([
+    // Run all checks in parallel — allSettled so one failure doesn't kill everything
+    const [crawlResult, psiResult, fileResult] = await Promise.allSettled([
       crawlPage(rawUrl),
       fetchPageSpeed(rawUrl),
       checkFiles(origin),
     ]);
+
+    const crawlItems = crawlResult.status === 'fulfilled' ? crawlResult.value : [];
+    const psiItems = psiResult.status === 'fulfilled' ? psiResult.value : [];
+    const fileItems = fileResult.status === 'fulfilled' ? fileResult.value : [];
+
+    // If the crawl itself failed we have no data — return error
+    if (crawlItems.length === 0 && psiItems.length === 0) {
+      const reason = crawlResult.status === 'rejected' ? crawlResult.reason?.message : 'unknown';
+      return NextResponse.json(
+        { error: `Could not reach ${rawUrl} — ${reason}` },
+        { status: 502 },
+      );
+    }
 
     const items = [...psiItems, ...crawlItems, ...fileItems];
     const overall = items.length > 0
