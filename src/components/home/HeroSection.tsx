@@ -49,7 +49,7 @@ export default function HeroSection() {
           >
             <span className="inline-flex items-center gap-2 border border-border rounded-pill px-4 py-1.5 text-sm font-mono text-dim backdrop-blur-sm">
               <span className="inline-block w-2 h-2 rounded-full bg-accent-2 animate-blink" />
-              AI-Powered Agency
+              AI Employees &amp; Agents
             </span>
           </motion.div>
 
@@ -61,10 +61,10 @@ export default function HeroSection() {
             animate="visible"
           >
             <span className="block font-display text-[clamp(2.5rem,7vw,5.5rem)] font-extrabold tracking-tight leading-[1.05] text-white">
-              Automate Everything.
+              Your next hire
             </span>
-            <span className="block font-display text-[clamp(2.5rem,7vw,5.5rem)] font-extrabold tracking-tight leading-[1.05] text-dim italic">
-              Grow Faster.
+            <span className="block font-display text-[clamp(2.5rem,7vw,5.5rem)] font-extrabold tracking-tight leading-[1.05] text-accent italic">
+              isn&apos;t human.
             </span>
           </motion.h1>
 
@@ -76,8 +76,8 @@ export default function HeroSection() {
             animate="visible"
             className="text-dim text-lg md:text-xl max-w-xl mx-auto mt-6 leading-relaxed font-body"
           >
-            We build AI agents, automations, and intelligent systems that run your
-            business while you focus on what matters.
+            We build AI Employees and custom agents that handle your
+            communication, grow your business, and run your operations — 24/7.
           </motion.p>
 
           {/* CTAs */}
@@ -96,10 +96,10 @@ export default function HeroSection() {
             </MagneticButton>
 
             <MagneticButton
-              href="/work"
+              href="/experience"
               className="inline-flex items-center justify-center gap-2 bg-transparent border border-border text-dim font-semibold rounded-pill px-8 py-4 text-base transition-all duration-300 hover:text-white hover:border-white/20"
             >
-              See Our Work
+              Experience It Live
               <ArrowRight className="w-4 h-4" />
             </MagneticButton>
           </motion.div>

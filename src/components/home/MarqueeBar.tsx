@@ -4,25 +4,25 @@ import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
 const ROW_1_ITEMS = [
+  'AI Employees',
   'AI Agents',
-  'Workflow Automation',
-  'WhatsApp Bots',
+  'WhatsApp & Instagram',
   'Lead Capture',
-  'Content Engine',
-  '10+ Years',
-  '200+ Clients',
+  '24/7 Operations',
+  'Smart Automation',
+  '40+ Industries',
   'pruve.co',
 ];
 
 const ROW_2_ITEMS = [
-  '200+ Clients',
-  'Content Engine',
-  'AI Agents',
+  '40+ Industries',
+  'Smart Automation',
+  'AI Employees',
   'Lead Capture',
-  '10+ Years',
-  'WhatsApp Bots',
+  '24/7 Operations',
+  'AI Agents',
   'pruve.co',
-  'Workflow Automation',
+  'WhatsApp & Instagram',
 ];
 
 function MarqueeRow({

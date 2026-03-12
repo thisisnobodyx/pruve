@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import {
   motion,
-  AnimatePresence,
   useScroll,
   useTransform,
   useInView,
@@ -16,59 +15,61 @@ import MagneticButton from '@/components/shared/MagneticButton';
 
 interface Plan {
   name: string;
+  subtitle: string;
   monthly: number;
-  annual: number;
   setup: number;
   features: string[];
   popular?: boolean;
   cta: string;
+  color: string;
 }
 
 const plans: Plan[] = [
   {
-    name: 'Signal',
-    monthly: 397,
-    annual: 330,
-    setup: 797,
+    name: 'The Operator',
+    subtitle: 'Communication',
+    monthly: 297,
+    setup: 497,
+    color: '#7DF9C0',
     features: [
-      '1 AI agent (WhatsApp or Receptionist)',
-      'Basic lead capture',
-      '8 AI social posts/month',
-      'Monthly performance report',
-      'Email support',
+      'Responds to WhatsApp, Instagram & Telegram',
+      'Books appointments automatically',
+      'Remembers every customer by name',
+      'Handles FAQs with your brand voice',
+      'Sends follow-up messages automatically',
     ],
     cta: 'Get Started',
   },
   {
-    name: 'Orbit',
-    monthly: 897,
-    annual: 747,
-    setup: 797,
+    name: 'The Manager',
+    subtitle: 'Growth',
+    monthly: 597,
+    setup: 997,
     popular: true,
+    color: '#7C3AED',
     features: [
-      'Everything in Signal',
-      'Multi-channel bot (2 platforms)',
-      'Lead follow-up automation',
-      'AI content engine (blog + social + email)',
-      '3 workflow automations',
-      'Priority support',
+      'Everything in The Operator',
+      'Creates & posts social media content',
+      'Follows up on every lead until they convert',
+      'Monitors & responds to online reviews',
+      'Sends weekly performance reports',
+      'Runs re-engagement campaigns',
     ],
     cta: 'Get Started',
   },
   {
-    name: 'Apex',
-    monthly: 1797,
-    annual: 1497,
-    setup: 797,
+    name: 'The Executive',
+    subtitle: 'Autonomous Ops',
+    monthly: 1197,
+    setup: 1997,
+    color: '#C8F135',
     features: [
-      'Everything in Orbit',
-      'Unlimited AI agents',
-      'Unlimited workflow automations',
-      'Custom smart website',
-      'AI social media manager',
-      'Daily briefings',
-      'Monthly strategy call',
-      'Dedicated support',
+      'Everything in The Manager',
+      'Monitors competitors automatically',
+      'Automates internal workflows end-to-end',
+      'Daily morning briefings via voice note',
+      'Manages vendor & partner communications',
+      'Learns new skills as your business evolves',
     ],
     cta: 'Get Started',
   },
@@ -114,14 +115,12 @@ function AnimatedPrice({ price }: { price: number }) {
 function PricingCard({
   plan,
   index,
-  isAnnual,
 }: {
   plan: Plan;
   index: number;
-  isAnnual: boolean;
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const price = isAnnual ? plan.annual : plan.monthly;
+  const price = plan.monthly;
 
   const { scrollYProgress } = useScroll({
     target: cardRef,
@@ -163,6 +162,12 @@ function PricingCard({
         </span>
       )}
 
+      <div
+        className="font-mono text-xs font-bold uppercase tracking-widest mb-2"
+        style={{ color: plan.color }}
+      >
+        {plan.subtitle}
+      </div>
       <h3 className="font-display text-xl font-bold mb-2 text-white">
         {plan.name}
       </h3>
@@ -203,7 +208,6 @@ function PricingCard({
 }
 
 export default function PricingPreview() {
-  const [isAnnual, setIsAnnual] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -218,42 +222,11 @@ export default function PricingPreview() {
       {/* Header — parallax entrance */}
       <motion.div style={{ y: titleY, opacity: titleOpacity }}>
         <h2 className="font-display text-4xl md:text-5xl font-extrabold text-center mb-4 text-white">
-          Simple pricing. Powerful results.
+          One AI Employee. Three scopes.
         </h2>
-        <p className="text-dim text-center mb-8">
-          Pick a plan. Start automating.
+        <p className="text-dim text-center mb-16 text-lg max-w-xl mx-auto">
+          Choose the level of autonomy your business needs.
         </p>
-      </motion.div>
-
-      {/* Monthly / Annual Toggle */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-        viewport={{ once: true }}
-        className="flex justify-center mb-16"
-      >
-        <div className="bg-bg-card border border-border rounded-pill p-1 inline-flex items-center">
-          <button
-            onClick={() => setIsAnnual(false)}
-            className={`relative rounded-pill px-6 py-2.5 text-sm font-medium transition-all duration-300 ${
-              !isAnnual ? 'bg-accent text-white' : 'text-dim hover:text-white/70'
-            }`}
-          >
-            Monthly
-          </button>
-          <button
-            onClick={() => setIsAnnual(true)}
-            className={`relative rounded-pill px-6 py-2.5 text-sm font-medium transition-all duration-300 ${
-              isAnnual ? 'bg-accent text-white' : 'text-dim hover:text-white/70'
-            }`}
-          >
-            Annual
-            <span className="ml-2 text-accent-3 text-xs font-bold">
-              Save 2 months
-            </span>
-          </button>
-        </div>
       </motion.div>
 
       {/* Plan Cards */}
@@ -266,7 +239,6 @@ export default function PricingPreview() {
             key={plan.name}
             plan={plan}
             index={index}
-            isAnnual={isAnnual}
           />
         ))}
       </div>

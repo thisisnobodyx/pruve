@@ -39,13 +39,13 @@ export default function FinalCTA() {
           style={{ scale: headingScale, opacity: headingOpacity }}
         >
           <h2 className="font-display text-4xl md:text-6xl font-extrabold mb-6 text-white">
-            Ready to automate your business?
+            Ready to hire your AI Employee?
           </h2>
         </motion.div>
 
         <ScrollReveal delay={0.1}>
           <p className="text-dim text-xl mb-10">
-            Join 200+ businesses running smarter with Pruve.
+            See what your AI Employee can do for your specific business — in 60 seconds.
           </p>
         </ScrollReveal>
 
@@ -84,10 +84,10 @@ export default function FinalCTA() {
           </div>
 
           <MagneticButton
-            href="/pricing"
+            href="/experience"
             className="inline-flex items-center justify-center bg-transparent border border-border text-white font-medium rounded-pill px-8 py-4 text-lg transition-all duration-300 hover:bg-white/5 hover:border-white/15"
           >
-            View Pricing
+            Experience It Live
           </MagneticButton>
         </motion.div>
       </div>

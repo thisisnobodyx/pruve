@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
-import { Bot, Zap, TrendingUp, type LucideIcon } from 'lucide-react';
+import { UserCheck, Bot, Workflow, type LucideIcon } from 'lucide-react';
 
 interface ServiceCard {
   icon: LucideIcon;
@@ -12,22 +12,22 @@ interface ServiceCard {
 
 const services: ServiceCard[] = [
   {
+    icon: UserCheck,
+    title: 'AI Employees',
+    description:
+      'A full-time digital worker that handles communication, books appointments, follows up on leads, and grows your business — across every channel, 24/7.',
+  },
+  {
     icon: Bot,
     title: 'AI Agents',
     description:
-      'Intelligent agents that talk to your customers 24/7 across WhatsApp, Telegram, Discord and more.',
+      'Standalone intelligent agents for specific tasks — WhatsApp bots, receptionists, lead capture, review management, and more.',
   },
   {
-    icon: Zap,
+    icon: Workflow,
     title: 'Automation',
     description:
-      'End-to-end workflow automation that eliminates repetitive tasks and connects all your tools.',
-  },
-  {
-    icon: TrendingUp,
-    title: 'Growth',
-    description:
-      'AI-powered content, ads, and marketing that runs on autopilot and scales without extra headcount.',
+      'End-to-end workflow automation that connects all your tools, eliminates repetitive tasks, and keeps your operations running without you.',
   },
 ];
 
@@ -124,7 +124,7 @@ export default function WhatWeDo() {
           What We Do
         </GradientRevealText>
         <p className="text-dim text-center mb-16 text-lg max-w-xl mx-auto font-body">
-          Three pillars. One mission. Automate everything.
+          AI Employees. AI Agents. Full automation.
         </p>
       </motion.div>
 
