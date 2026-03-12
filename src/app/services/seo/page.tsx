@@ -1,5 +1,9 @@
 import ScrollToTop from '@/components/shared/ScrollToTop';
-import SEOPage from '@/components/services/seo/SEOPage';
+import SEOHero from '@/components/services/seo/Hero';
+import ProblemSection from '@/components/services/seo/ProblemSection';
+import InteractiveDemo from '@/components/services/seo/InteractiveDemo';
+import HowItWorks from '@/components/services/seo/HowItWorks';
+import ResultsSection from '@/components/services/seo/ResultsSection';
 
 export const metadata = {
   title: 'SEO Services — Pruve',
@@ -11,7 +15,11 @@ export default function SEORoute() {
   return (
     <main>
       <ScrollToTop />
-      <SEOPage />
+      <SEOHero />
+      <ProblemSection />
+      <InteractiveDemo />
+      <HowItWorks />
+      <ResultsSection />
     </main>
   );
 }

@@ -1,5 +1,9 @@
 import ScrollToTop from '@/components/shared/ScrollToTop';
-import WebDesignPage from '@/components/services/web-design/WebDesignPage';
+import WebDesignHero from '@/components/services/web-design/Hero';
+import ProblemSection from '@/components/services/web-design/ProblemSection';
+import InteractiveDemo from '@/components/services/web-design/InteractiveDemo';
+import HowItWorks from '@/components/services/web-design/HowItWorks';
+import ResultsSection from '@/components/services/web-design/ResultsSection';
 
 export const metadata = {
   title: 'Web Design — Pruve',
@@ -11,7 +15,11 @@ export default function WebDesignRoute() {
   return (
     <main>
       <ScrollToTop />
-      <WebDesignPage />
+      <WebDesignHero />
+      <ProblemSection />
+      <InteractiveDemo />
+      <HowItWorks />
+      <ResultsSection />
     </main>
   );
 }
