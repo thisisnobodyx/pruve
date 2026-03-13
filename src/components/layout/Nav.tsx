@@ -38,6 +38,7 @@ export default function Nav() {
   const [megaOpen, setMegaOpen] = useState<'agents' | 'services' | false>(false);
   const megaTimeout = useRef<NodeJS.Timeout | null>(null);
   const megaRef = useRef<HTMLDivElement>(null);
+  const servicesRef = useRef<HTMLLIElement>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -101,6 +102,7 @@ export default function Nav() {
                 return (
                   <li
                     key={link.label}
+                    ref={link.hasDropdown === 'services' ? servicesRef : undefined}
                     className="relative"
                     onMouseEnter={() => handleMegaEnter(link.hasDropdown)}
                     onMouseLeave={handleMegaLeave}
@@ -244,33 +246,32 @@ export default function Nav() {
             transition={{ duration: 0.25, ease: 'easeOut' }}
             onMouseEnter={() => handleMegaEnter('services')}
             onMouseLeave={handleMegaLeave}
-            className="fixed top-20 left-0 right-0 z-40"
+            className="fixed top-20 z-40"
+            style={{ left: servicesRef.current?.getBoundingClientRect().left ?? 0 }}
           >
-            <div className="max-w-[1400px] mx-auto px-6">
-              <div className="bg-bg-2/95 backdrop-blur-2xl border border-border rounded-2xl p-6 shadow-2xl shadow-black/40 inline-block">
-                <div className="flex gap-3">
-                  {services.map((service) => (
-                    <Link
-                      key={service.href}
-                      href={service.href}
-                      onClick={() => setMegaOpen(false)}
-                      className="group flex items-start gap-3 p-3 rounded-xl transition-all duration-200 hover:bg-white/[0.04] min-w-[200px]"
+            <div className="bg-bg-2/95 backdrop-blur-2xl border border-border rounded-2xl p-3 shadow-2xl shadow-black/40">
+              <div className="flex flex-col gap-1">
+                {services.map((service) => (
+                  <Link
+                    key={service.href}
+                    href={service.href}
+                    onClick={() => setMegaOpen(false)}
+                    className="group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 hover:bg-white/[0.04] min-w-[220px]"
+                  >
+                    <div
+                      className="w-9 h-9 rounded-lg flex items-center justify-center text-base shrink-0"
+                      style={{ background: `${service.color}15` }}
                     >
-                      <div
-                        className="w-10 h-10 rounded-lg flex items-center justify-center text-lg shrink-0"
-                        style={{ background: `${service.color}15` }}
-                      >
-                        {service.icon}
+                      {service.icon}
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-white group-hover:text-accent transition-colors">
+                        {service.label}
                       </div>
-                      <div>
-                        <div className="text-sm font-medium text-white group-hover:text-accent transition-colors">
-                          {service.label}
-                        </div>
-                        <div className="text-xs text-dim mt-0.5">{service.desc}</div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
+                      <div className="text-xs text-dim mt-0.5">{service.desc}</div>
+                    </div>
+                  </Link>
+                ))}
               </div>
             </div>
           </motion.div>
