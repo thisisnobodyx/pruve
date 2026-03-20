@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { capabilities, tierColors, tierLabels } from './experience-data';
-import type { Capability } from './experience-data';
+import type { Capability, Industry } from './experience-data';
 import { getIndustry } from './industries';
 
 interface CapabilityExplorerProps {
   selectedIndustry: string | null;
+  customIndustry?: Industry;
 }
 
 function CapabilityCard({
@@ -120,8 +121,8 @@ function CapabilityCard({
   );
 }
 
-export default function CapabilityExplorer({ selectedIndustry }: CapabilityExplorerProps) {
-  const industry = selectedIndustry ? getIndustry(selectedIndustry) : null;
+export default function CapabilityExplorer({ selectedIndustry, customIndustry }: CapabilityExplorerProps) {
+  const industry = customIndustry ?? (selectedIndustry ? getIndustry(selectedIndustry) : null);
   const examples = industry?.capabilityExamples ?? {};
 
   // Group by tier

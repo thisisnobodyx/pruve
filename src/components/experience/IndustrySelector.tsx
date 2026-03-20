@@ -19,10 +19,12 @@ export default function IndustrySelector({ selectedIndustry, onSelect }: Industr
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Get the selected industry object
+  // Get the selected industry object (custom: prefix means user typed a freeform industry)
+  const isCustom = selectedIndustry?.startsWith('custom:');
+  const customLabel = isCustom ? selectedIndustry!.slice(7) : null;
   const selected = useMemo(
-    () => allIndustries.find((i) => i.id === selectedIndustry),
-    [selectedIndustry]
+    () => (isCustom ? null : allIndustries.find((i) => i.id === selectedIndustry)),
+    [selectedIndustry, isCustom]
   );
 
   // Filter industries by search query
@@ -158,15 +160,17 @@ export default function IndustrySelector({ selectedIndustry, onSelect }: Industr
         >
           {/* Selected state badge */}
           <AnimatePresence>
-            {selected && !isOpen && (
+            {(selected || isCustom) && !isOpen && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 className="mb-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/30"
               >
-                <span className="text-lg">{selected.emoji}</span>
-                <span className="text-white font-medium text-sm">{selected.label}</span>
+                <span className="text-lg">{isCustom ? '✨' : selected!.emoji}</span>
+                <span className="text-white font-medium text-sm">
+                  {isCustom ? customLabel : selected!.label}
+                </span>
                 <button
                   onClick={() => {
                     setIsOpen(true);
@@ -196,7 +200,13 @@ export default function IndustrySelector({ selectedIndustry, onSelect }: Industr
               }}
               onFocus={() => setIsOpen(true)}
               onKeyDown={handleKeyDown}
-              placeholder={selected ? `${selected.emoji} ${selected.label}` : 'Search your industry...'}
+              placeholder={
+                isCustom
+                  ? `✨ ${customLabel}`
+                  : selected
+                    ? `${selected.emoji} ${selected.label}`
+                    : 'Search your industry...'
+              }
               className="w-full bg-bg-card/80 backdrop-blur-xl border border-border rounded-2xl pl-12 pr-4 py-4 text-white text-lg placeholder:text-white/30 focus:outline-none focus:border-accent/50 focus:shadow-[0_0_30px_rgba(124,58,237,0.15)] transition-all"
             />
             <div className="absolute right-4 top-1/2 -translate-y-1/2 text-dim text-xs pointer-events-none">
@@ -263,20 +273,20 @@ export default function IndustrySelector({ selectedIndustry, onSelect }: Industr
                   ))
                 )}
 
-                {/* Freeform "Other" entry */}
+                {/* Freeform custom industry — AI generates a plan specific to what they typed */}
                 {query.trim() && !filtered.some((i) => i.label.toLowerCase() === query.toLowerCase()) && (
                   <div className="border-t border-border">
                     <button
-                      onClick={() => handleSelect('other')}
+                      onClick={() => handleSelect(`custom:${query.trim()}`)}
                       className="w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-white/5 transition-colors"
                     >
-                      <span className="text-xl">❓</span>
+                      <span className="text-xl">✨</span>
                       <div>
                         <div className="text-white text-sm font-medium">
-                          Use &ldquo;{query}&rdquo; as my industry
+                          Build a custom AI plan for &ldquo;{query}&rdquo;
                         </div>
                         <div className="text-dim text-[11px]">
-                          We&apos;ll show you a general AI Employee experience
+                          Our AI will generate a simulation specific to your industry
                         </div>
                       </div>
                     </button>

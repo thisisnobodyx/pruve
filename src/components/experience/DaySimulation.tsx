@@ -87,8 +87,17 @@ function PhoneConversation({ event }: { event: DayEvent }) {
 /* ------------------------------------------------------------------ */
 /* MAIN COMPONENT                                                       */
 /* ------------------------------------------------------------------ */
-export default function DaySimulation({ industryId }: { industryId: string }) {
-  const industry = getIndustry(industryId);
+import type { Industry } from './experience-data';
+
+export default function DaySimulation({
+  industryId,
+  customIndustry,
+}: {
+  industryId: string;
+  customIndustry?: Industry;
+}) {
+  // Use injected custom plan if provided, otherwise look up from static list
+  const industry = customIndustry ?? getIndustry(industryId);
   const events = industry?.dayEvents ?? [];
 
   const [activeIndex, setActiveIndex] = useState(0);

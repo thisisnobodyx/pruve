@@ -8,12 +8,15 @@ import { packages, tierColors, tierLabels } from './experience-data';
 import type { TierId } from './experience-data';
 import { getIndustry } from './industries';
 
+import type { Industry } from './experience-data';
+
 interface ImpactSectionProps {
   selectedIndustry: string | null;
+  customIndustry?: Industry;
 }
 
-export default function ImpactSection({ selectedIndustry }: ImpactSectionProps) {
-  const industry = selectedIndustry ? getIndustry(selectedIndustry) : null;
+export default function ImpactSection({ selectedIndustry, customIndustry }: ImpactSectionProps) {
+  const industry = customIndustry ?? (selectedIndustry ? getIndustry(selectedIndustry) : null);
 
   return (
     <section className="relative py-section px-6 bg-bg-2 overflow-hidden">
