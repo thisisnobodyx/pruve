@@ -39,19 +39,29 @@ export default function ExperiencePage() {
     }, 300);
 
     try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 30_000); // 30s max
+
       const res = await fetch('/api/experience-plan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ industry: industryName }),
+        signal: controller.signal,
       });
+      clearTimeout(timeout);
+
       const data = await res.json();
       if (data.plan) {
         setCustomPlan(data.plan);
       } else {
-        setCustomError(data.error || 'Could not generate plan');
+        setCustomError(data.error || 'Could not generate plan — please try again');
       }
-    } catch {
-      setCustomError('Network error — please try again');
+    } catch (err) {
+      if (err instanceof Error && err.name === 'AbortError') {
+        setCustomError('Request timed out — please try again');
+      } else {
+        setCustomError('Network error — please try again');
+      }
     }
     setCustomLoading(false);
   };

@@ -1,9 +1,38 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { NextRequest, NextResponse } from 'next/server';
+import { rateLimit, checkDailyGlobalCap } from '@/lib/rate-limit';
 
 const client = new Anthropic();
 
+const DEMO_DAILY_CAP = parseInt(process.env.DEMO_DAILY_CAP || '500', 10);
+
 export async function POST(req: NextRequest) {
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.headers.get('x-real-ip') || 'unknown';
+
+  // Rate limit: 3 req/min, 10 req/hr per IP (expensive endpoint)
+  const perMin = rateLimit('exp-min', ip, { windowMs: 60_000, maxRequests: 3 });
+  if (!perMin.allowed) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again shortly.' },
+      { status: 429, headers: { 'Retry-After': String(Math.ceil(perMin.retryAfterMs / 1000)) } }
+    );
+  }
+  const perHour = rateLimit('exp-hr', ip, { windowMs: 3_600_000, maxRequests: 10 });
+  if (!perHour.allowed) {
+    return NextResponse.json(
+      { error: 'Hourly limit reached. Please try again later.' },
+      { status: 429, headers: { 'Retry-After': String(Math.ceil(perHour.retryAfterMs / 1000)) } }
+    );
+  }
+
+  // Global daily cap (shared with demo chat)
+  if (!checkDailyGlobalCap(DEMO_DAILY_CAP)) {
+    return NextResponse.json(
+      { error: 'Demo limit reached for today. Contact us at info@pruve.ca to see a full demo!' },
+      { status: 429 }
+    );
+  }
+
   const { industry } = await req.json();
   if (!industry?.trim()) {
     return NextResponse.json({ error: 'industry required' }, { status: 400 });
@@ -11,8 +40,8 @@ export async function POST(req: NextRequest) {
 
   try {
     const response = await client.messages.create({
-      model: 'claude-sonnet-4-5',
-      max_tokens: 3000,
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 2000,
       system: `You are a product specialist at Pruve — an AI employee platform for small businesses.
 When given an industry, you generate a realistic simulation of what a Pruve AI employee does in a full working day for that industry.
 Return ONLY valid JSON. No markdown fences, no explanation.`,
@@ -24,7 +53,6 @@ Return ONLY valid JSON. No markdown fences, no explanation.`,
 Return a JSON object with EXACTLY this structure (all fields required):
 
 {
-  "id": "custom-${Date.now()}",
   "label": "<industry name properly capitalized>",
   "emoji": "<single most fitting emoji>",
   "category": "Other",
@@ -80,12 +108,19 @@ Rules:
 
     let plan;
     try {
-      const cleaned = text.text.trim().replace(/^```json\s*/i, '').replace(/\s*```$/, '');
+      // Strip markdown fences if model wraps output
+      const cleaned = text.text
+        .trim()
+        .replace(/^```json\s*/i, '')
+        .replace(/^```\s*/i, '')
+        .replace(/\s*```$/, '')
+        .trim();
       plan = JSON.parse(cleaned);
-      // Ensure id is unique
-      plan.id = `custom-${industry.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`;
-    } catch {
-      return NextResponse.json({ error: 'Failed to parse AI response' }, { status: 500 });
+      // Always assign a stable unique id — never rely on the model for this
+      plan.id = `custom-${industry.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${Date.now()}`;
+    } catch (parseErr) {
+      console.error('JSON parse error:', parseErr, '\nRaw response:', text.text.slice(0, 500));
+      return NextResponse.json({ error: 'Failed to parse AI response. Please try again.' }, { status: 500 });
     }
 
     return NextResponse.json({ plan });
